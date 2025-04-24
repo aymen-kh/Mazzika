@@ -1,0 +1,30 @@
+@model List<Mazzika.Models.Video>
+
+@{
+    ViewData["Title"] = "Your Top Tracks";
+}
+
+<h1>Your Top Tracks</h1>
+
+@if (Model == null || Model.Count == 0)
+{
+    <p>You haven't watched or listened to any tracks yet.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var video in Model)
+        {
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <img src="@video.ThumbnailUrl" class="card-img-top" alt="@video.Title">
+                    <div class="card-body">
+                        <h5 class="card-title">@video.Title</h5>
+                        <p class="card-text">@video.Description</p>
+                        <p class="card-text"><small class="text-muted">Played @video.PlayCount times</small></p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

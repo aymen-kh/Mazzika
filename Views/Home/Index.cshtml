@@ -1,0 +1,253 @@
+﻿@model List<Mazzika.Models.Video>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+    body {
+        background-color: #121212;
+        color: #fff;
+    }
+    .card {
+        background-color: #1e1e1e;
+        border: none;
+        border-radius: 15px;
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: scale(1.05);
+    }
+    .btn-primary {
+        background-color: #1db954;
+        border: none;
+    }
+    .btn-primary:hover {
+        background-color: #1ed760;
+    }
+    .search-bar {
+        margin-bottom: 30px;
+    }
+    #player-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #1e1e1e;
+        padding: 10px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 999;
+    }
+    #controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    #progress-container {
+        width: 100%;
+    }
+    #progress {
+        width: 100%;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <form method="get" asp-action="Index" class="search-bar">
+        <div class="input-group">
+            <input type="text" name="searchQuery" class="form-control" placeholder="Search for songs..." value="@ViewBag.SearchQuery">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
+    <div class="row">
+        @foreach (var video in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card" onclick="playVideo('@video.Id', '@video.Title', '@video.ThumbnailUrl')">
+                    <img src="@video.ThumbnailUrl" class="card-img-top" alt="@video.Title" />
+                    <div class="card-body">
+                        <h5 class="card-title">@video.Title</h5>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Player Bar -->
+<div id="player-bar" style="display: none;">
+    <div id="controls">
+        <img id="player-thumbnail" src="" alt="Thumbnail" width="60" height="60" class="rounded">
+        <div id="song-info">
+            <div id="song-title"></div>
+        </div>
+        <button class="btn btn-link text-light" onclick="prevSong()">
+            <i class="bi bi-skip-start-fill" style="font-size: 1.8rem;"></i>
+        </button>
+        <button class="btn btn-link text-light" onclick="togglePlay()">
+            <i id="play-pause-icon" class="bi bi-play-fill" style="font-size: 2rem;"></i>
+        </button>
+        <button class="btn btn-link text-light" onclick="nextSong()">
+            <i class="bi bi-skip-end-fill" style="font-size: 1.8rem;"></i>
+        </button>
+    </div>
+    <div id="progress-container">
+    <div class="d-flex justify-content-between">
+        <span id="current-time">0:00</span>
+        <span id="total-duration">0:00</span>
+    </div>
+    <input type="range" id="progress" value="0" step="1">
+</div>
+<div id="loading-spinner" class="text-center text-light" style="display: none;">
+    <div class="spinner-border text-light" role="status" style="width: 1.5rem; height: 1.5rem;">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+</div>
+
+<!-- YouTube Player Script -->
+<div id="player" style="display:none;"></div>
+
+@section Scripts {
+<!-- Load YouTube IFrame Player API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+    let playlist = [];
+    let playlistTitles = [];
+    let playlistThumbs = [];
+    let currentIndex = 0;
+    let player;
+    let playPauseIcon;
+    let progressSlider;
+    let isSeeking = false;
+    let updateInterval;
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            height: '0',
+            width: '0',
+            videoId: '',
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        // Player ready
+    }
+
+    function onPlayerStateChange(event) {
+        if (event.data === YT.PlayerState.PLAYING) {
+            startUpdatingProgress();
+            playPauseIcon.className = 'bi bi-pause-fill';
+        } else {
+            playPauseIcon.className = 'bi bi-play-fill';
+        }
+    }
+
+   function startUpdatingProgress() {
+    clearInterval(updateInterval);
+    updateInterval = setInterval(() => {
+        if (player && player.getDuration) {
+            const duration = player.getDuration();
+            const currentTime = player.getCurrentTime();
+
+            if (!isSeeking) {
+                progressSlider.max = duration;
+                progressSlider.value = currentTime;
+
+                document.getElementById('current-time').textContent = formatTime(currentTime);
+                document.getElementById('total-duration').textContent = formatTime(duration);
+            }
+
+            // Auto play next when song ends
+            if (player.getPlayerState() === YT.PlayerState.ENDED) {
+                nextSong();
+            }
+        }
+    }, 500);
+}
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        playPauseIcon = document.getElementById('play-pause-icon');
+        progressSlider = document.getElementById('progress');
+
+        progressSlider.addEventListener('input', () => {
+            isSeeking = true;
+        });
+
+        progressSlider.addEventListener('change', () => {
+            player.seekTo(progressSlider.value, true);
+            isSeeking = false;
+        });
+    });
+
+    function playVideo(id, title, thumbnail) {
+        if (playlist.length === 0) {
+            playlist = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(v => v.Id).ToList()));
+            playlistTitles = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(v => v.Title).ToList()));
+            playlistThumbs = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(v => v.ThumbnailUrl).ToList()));
+        }
+
+        currentIndex = playlist.indexOf(id);
+
+        loadVideo(currentIndex, true);
+    }
+
+    function loadVideo(index, autoplay = false) {
+    const id = playlist[index];
+    const title = playlistTitles[index];
+    const thumbnail = playlistThumbs[index];
+
+    // Show spinner
+    document.getElementById('loading-spinner').style.display = 'block';
+
+    document.getElementById('player-thumbnail').src = thumbnail;
+    document.getElementById('song-title').innerText = title;
+
+    player.loadVideoById(id);
+
+    document.getElementById('player-bar').style.display = 'flex';
+
+    if (autoplay) {
+        player.playVideo();
+    }
+
+    // Wait a bit to hide spinner
+    setTimeout(() => {
+        document.getElementById('loading-spinner').style.display = 'none';
+    }, 1200);
+}
+
+    function togglePlay() {
+        const state = player.getPlayerState();
+        if (state === YT.PlayerState.PLAYING) {
+            player.pauseVideo();
+        } else {
+            player.playVideo();
+        }
+    }
+
+    function nextSong() {
+        currentIndex = (currentIndex + 1) % playlist.length;
+        loadVideo(currentIndex, true);
+    }
+
+    function prevSong() {
+        currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+        loadVideo(currentIndex, true);
+    }
+    function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60).toString().padStart(2, '0');
+    return `${min}:${sec}`;
+}
+
+</script>
+}

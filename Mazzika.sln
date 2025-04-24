@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mazzika", "Mazzika.csproj", "{4AF477B8-AED6-CE6F-CF1B-9A7F0873E503}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4AF477B8-AED6-CE6F-CF1B-9A7F0873E503}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AF477B8-AED6-CE6F-CF1B-9A7F0873E503}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AF477B8-AED6-CE6F-CF1B-9A7F0873E503}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AF477B8-AED6-CE6F-CF1B-9A7F0873E503}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5FB9AC87-05E7-42F7-94A9-352B194B2C66}
+	EndGlobalSection
+EndGlobal

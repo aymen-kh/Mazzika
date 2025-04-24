@@ -1,0 +1,8 @@
+/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/Mazzika.csproj.AssemblyReference.cache
+/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/Mazzika.GeneratedMSBuildEditorConfig.editorconfig
+/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/Mazzika.AssemblyInfoInputs.cache
+/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/Mazzika.AssemblyInfo.cs
+/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/Mazzika.csproj.CoreCompileInputs.cache
+/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/Mazzika.MvcApplicationPartsAssemblyInfo.cache
+/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/Mazzika.RazorAssemblyInfo.cache
+/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/Mazzika.RazorAssemblyInfo.cs
