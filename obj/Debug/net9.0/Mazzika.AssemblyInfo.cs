@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Mazzika")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8e34e4adb6bf23926f1f96260b68370cf5bf1a2b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Mazzika")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Mazzika")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
