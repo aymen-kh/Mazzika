@@ -3,3 +3,4 @@ echo "obj/" >> .gitignore
 echo "*.user" >> .gitignore
 echo "*.vs" >> .gitignore
 echo "*.swp" >> .gitignore
+echo "appsettings.json" >> .gitignore
