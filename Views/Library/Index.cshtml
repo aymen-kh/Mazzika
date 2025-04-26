@@ -1,6 +1,30 @@
+@model List<Mazzika.Models.Video>
+
 @{
     ViewData["Title"] = "Library";
 }
 
 <h1>Your Library</h1>
-<p>Display the user's library here.</p>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No videos found in your library.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var video in Model)
+        {
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <img src="@video.ThumbnailUrl" class="card-img-top" alt="@video.Title">
+                    <div class="card-body">
+                        <h5 class="card-title">@video.Title</h5>
+                        <p class="card-text">@video.Description</p>
+                        <p class="card-text"><small class="text-muted">Published on @video.PublishedAt.ToShortDateString()</small></p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

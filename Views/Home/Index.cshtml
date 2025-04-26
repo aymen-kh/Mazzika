@@ -65,7 +65,7 @@
         {
             <div class="col-md-4 mb-4">
                 <div class="card" onclick="playVideo('@video.Id', '@video.Title', '@video.ThumbnailUrl')">
-                    <img src="@video.ThumbnailUrl" class="card-img-top" alt="@video.Title" />
+                    <img src="@video.ThumbnailUrl" class="card-img-top" alt="@video.Title" style="object-fit: cover; width: 100%; height: 200px;" />
                     <div class="card-body">
                         <h5 class="card-title">@video.Title</h5>
                     </div>
@@ -188,16 +188,42 @@
         });
     });
 
-    function playVideo(id, title, thumbnail) {
-        if (playlist.length === 0) {
-            playlist = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(v => v.Id).ToList()));
-            playlistTitles = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(v => v.Title).ToList()));
-            playlistThumbs = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Select(v => v.ThumbnailUrl).ToList()));
-        }
+    function playVideo(videoId, title, description, thumbnailUrl, publishedAt, channelTitle) {
+        console.log('Playing video:', { videoId, title, description, thumbnailUrl, publishedAt, channelTitle });
 
-        currentIndex = playlist.indexOf(id);
+        // Notify the server to add the video to top tracks
+        const video = {
+            id: videoId,
+            title: title,
+            description: description,
+            thumbnailUrl: thumbnailUrl,
+            publishedAt: publishedAt,
+            channelTitle: channelTitle
+        };
 
-        loadVideo(currentIndex, true);
+        fetch('/Music/AddToTopTracks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(video)
+        }).then(response => {
+            if (response.ok) {
+                console.log('Video added to top tracks successfully.');
+            } else {
+                console.error('Failed to add video to top tracks. Response status:', response.status);
+                response.text().then(text => console.error('Response body:', text));
+            }
+        }).catch(error => {
+            console.error('Error adding video to top tracks:', error);
+        });
+
+        // Play the video
+        player.loadVideoById(videoId);
+        document.getElementById('player-thumbnail').src = thumbnailUrl;
+        document.getElementById('song-title').innerText = title;
+        document.getElementById('player-bar').style.display = 'flex';
+        player.playVideo();
     }
 
     function loadVideo(index, autoplay = false) {

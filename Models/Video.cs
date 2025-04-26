@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Mazzika.Models
 {
     public class Video
@@ -10,37 +13,25 @@ namespace Mazzika.Models
         public string ChannelTitle { get; set; } = string.Empty;
         public int PlayCount { get; set; } // Property to track play count
     }
-}
 
-@section Scripts {
-<script>
-    function addToTopTracks(video) {
-        fetch('/Music/AddToTopTracks', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(video)
-        }).then(response => {
-            if (response.ok) {
-                console.log('Video added to top tracks.');
-            } else {
-                console.error('Failed to add video to top tracks.');
-            }
-        });
+    [Table("TopTracks")]
+    public class TopTrack
+    {
+        [Key]
+        public int Id { get; set; }
+
+        public string VideoId { get; set; }
+
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+
+        public string ThumbnailUrl { get; set; }
+
+        public DateTime PublishedAt { get; set; }
+
+        public string ChannelTitle { get; set; }
+
+        public int PlayCount { get; set; }
     }
-
-    function onVideoPlayed(videoId, title, description, thumbnailUrl, publishedAt, channelTitle) {
-        const video = {
-            id: videoId,
-            title: title,
-            description: description,
-            thumbnailUrl: thumbnailUrl,
-            publishedAt: publishedAt,
-            channelTitle: channelTitle
-        };
-
-        addToTopTracks(video);
-    }
-</script>
 }

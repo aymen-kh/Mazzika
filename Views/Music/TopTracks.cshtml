@@ -1,30 +1,78 @@
-@model List<Mazzika.Models.Video>
+@model List<Mazzika.Models.TopTrack>
 
 @{
-    ViewData["Title"] = "Your Top Tracks";
+    ViewData["Title"] = "Top Tracks";
 }
 
-<h1>Your Top Tracks</h1>
+<h1>Top Tracks</h1>
 
-@if (Model == null || Model.Count == 0)
+@if (Model != null && Model.Any())
 {
-    <p>You haven't watched or listened to any tracks yet.</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Play Count</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var track in Model)
+            {
+                <tr>
+                    <td>@track.Title</td>
+                    <td>@track.PlayCount</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="playVideo('@track.VideoId', '@track.Title', '@track.Description', '@track.ThumbnailUrl', '@track.PublishedAt', '@track.ChannelTitle')">Play</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 else
 {
-    <div class="row">
-        @foreach (var video in Model)
-        {
-            <div class="col-md-4">
-                <div class="card mb-3">
-                    <img src="@video.ThumbnailUrl" class="card-img-top" alt="@video.Title">
-                    <div class="card-body">
-                        <h5 class="card-title">@video.Title</h5>
-                        <p class="card-text">@video.Description</p>
-                        <p class="card-text"><small class="text-muted">Played @video.PlayCount times</small></p>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
+    <p>No tracks available.</p>
 }
+
+<script>
+    function playVideo(videoId, title, description, thumbnailUrl, publishedAt, channelTitle) {
+        // Logic to play the video
+        alert('Playing video with ID: ' + videoId);
+
+        // Notify the server to add the video to top tracks
+        const video = {
+            id: videoId,
+            title: title,
+            description: description,
+            thumbnailUrl: thumbnailUrl,
+            publishedAt: publishedAt,
+            channelTitle: channelTitle
+        };
+
+        fetch('/Music/AddToTopTracks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(video)
+        }).then(response => {
+            if (response.ok) {
+                console.log('Video added to top tracks.');
+            } else {
+                console.error('Failed to add video to top tracks.');
+            }
+        }).catch(error => {
+            console.error('Error adding video to top tracks:', error);
+        });
+    }
+
+    function refreshTopTracks() {
+        fetch('/Music/TopTracks')
+            .then(response => response.text())
+            .then(html => {
+                document.body.innerHTML = html;
+            })
+            .catch(error => console.error('Error refreshing top tracks:', error));
+    }
+</script>

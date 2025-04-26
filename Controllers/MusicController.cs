@@ -1,75 +1,88 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Mazzika.Models;
-using System.Text.Json;
+using System.Linq;
 
 namespace Mazzika.Controllers
 {
+    public class MusicDbContext : DbContext
+    {
+        public DbSet<TopTrack> TopTracks { get; set; }
+
+        public MusicDbContext(DbContextOptions<MusicDbContext> options) : base(options) { }
+    }
+
     public class MusicController : Controller
     {
-        public IActionResult Trending()
+        private readonly ILogger<MusicController> _logger;
+        private readonly MusicDbContext _dbContext;
+
+        public MusicController(ILogger<MusicController> logger, MusicDbContext dbContext)
         {
-            return View();
-        }
-
-        public IActionResult Recommended()
-        {
-            return View();
-        }
-
-        public IActionResult TopTracks()
-        {
-            var topTracksCookie = Request.Cookies["TopTracks"];
-            List<Video> topTracks = new();
-
-            if (!string.IsNullOrEmpty(topTracksCookie))
-            {
-                try
-                {
-                    topTracks = JsonSerializer.Deserialize<List<Video>>(topTracksCookie) ?? new List<Video>();
-                }
-                catch
-                {
-                    // Handle invalid cookie data
-                    topTracks = new List<Video>();
-                }
-            }
-
-            return View(topTracks);
+            _logger = logger;
+            _dbContext = dbContext;
         }
 
         [HttpPost]
-        public IActionResult AddToTopTracks(Video video)
+        public IActionResult AddToTopTracks([FromBody] Video video)
         {
-            // Retrieve the "TopTracks" cookie
-            var topTracksCookie = Request.Cookies["TopTracks"];
-            List<Video> topTracks = new();
+            _logger.LogInformation("AddToTopTracks called with video ID: {VideoId}", video.Id);
 
-            if (!string.IsNullOrEmpty(topTracksCookie))
+            if (video == null || string.IsNullOrEmpty(video.Id))
             {
-                // Deserialize the cookie value into a list of videos
-                topTracks = JsonSerializer.Deserialize<List<Video>>(topTracksCookie) ?? new List<Video>();
+                _logger.LogError("Invalid video data received.");
+                return BadRequest("Invalid video data.");
             }
 
-            // Check if the video already exists in the list
-            var existingVideo = topTracks.FirstOrDefault(v => v.Id == video.Id);
-            if (existingVideo != null)
+            var existingTrack = _dbContext.TopTracks.FirstOrDefault(t => t.VideoId == video.Id);
+
+            if (existingTrack != null)
             {
-                // Increment the play count
-                existingVideo.PlayCount++;
+                existingTrack.PlayCount++;
+                _logger.LogInformation("Updated play count for video ID: {VideoId}", video.Id);
             }
             else
             {
-                // Add the new video with an initial play count of 1
-                video.PlayCount = 1;
-                topTracks.Add(video);
+                var newTrack = new TopTrack
+                {
+                    VideoId = video.Id,
+                    Title = video.Title,
+                    Description = video.Description,
+                    ThumbnailUrl = video.ThumbnailUrl,
+                    PublishedAt = video.PublishedAt,
+                    ChannelTitle = video.ChannelTitle,
+                    PlayCount = 1
+                };
+                _dbContext.TopTracks.Add(newTrack);
+                _logger.LogInformation("Added new track for video ID: {VideoId}", video.Id);
             }
 
-            // Serialize the updated list and store it back in the cookie
-            var options = new CookieOptions { Expires = DateTime.Now.AddDays(7) };
-            Response.Cookies.Append("TopTracks", JsonSerializer.Serialize(topTracks), options);
+            _dbContext.SaveChanges();
+            _logger.LogInformation("Database updated successfully.");
 
             return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult TopTracks()
+        {
+            var topTracks = _dbContext.TopTracks.OrderByDescending(t => t.PlayCount).ToList();
+            return View(topTracks);
+        }
+
+        [HttpGet]
+        public IActionResult DebugTopTracks()
+        {
+            var topTracks = _dbContext.TopTracks.ToList();
+            if (!topTracks.Any())
+            {
+                _logger.LogWarning("No tracks found in the database.");
+                return Content("No tracks found.");
+            }
+
+            _logger.LogInformation("Retrieved {Count} tracks from the database.", topTracks.Count);
+            return Json(topTracks);
         }
     }
 }

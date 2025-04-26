@@ -74,3 +74,43 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 @await RenderSectionAsync("Scripts", required: false)
+
+@section Scripts {
+<script>
+    function addToTopTracks(video) {
+        console.log('Attempting to add video to top tracks:', video);
+
+        fetch('/Music/AddToTopTracks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(video)
+        }).then(response => {
+            if (response.ok) {
+                console.log('Video successfully added to top tracks.');
+            } else {
+                console.error('Failed to add video to top tracks. Response status:', response.status);
+                response.text().then(text => console.error('Response body:', text));
+            }
+        }).catch(error => {
+            console.error('Error while adding video to top tracks:', error);
+        });
+    }
+
+    function onVideoPlayed(videoId, title, description, thumbnailUrl, publishedAt, channelTitle) {
+        console.log('Video played:', { videoId, title, description, thumbnailUrl, publishedAt, channelTitle });
+
+        const video = {
+            id: videoId,
+            title: title,
+            description: description,
+            thumbnailUrl: thumbnailUrl,
+            publishedAt: publishedAt,
+            channelTitle: channelTitle
+        };
+
+        addToTopTracks(video);
+    }
+</script>
+}

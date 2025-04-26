@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "KzBhGlybTU0=",
+  "dgSpecHash": "9XD0PNd9auA=",
   "success": true,
   "projectFilePath": "/home/aymen-khelifi/tryTo/Mazzika/Mazzika.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,18 @@
     "/home/aymen-khelifi/.nuget/packages/google.apis.core/1.69.0/google.apis.core.1.69.0.nupkg.sha512",
     "/home/aymen-khelifi/.nuget/packages/google.apis.youtube.v3/1.69.0.3742/google.apis.youtube.v3.1.69.0.3742.nupkg.sha512",
     "/home/aymen-khelifi/.nuget/packages/microsoft.aspnetcore.authentication.google/9.0.4/microsoft.aspnetcore.authentication.google.9.0.4.nupkg.sha512",
+    "/home/aymen-khelifi/.nuget/packages/microsoft.entityframeworkcore/9.0.4/microsoft.entityframeworkcore.9.0.4.nupkg.sha512",
+    "/home/aymen-khelifi/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.4/microsoft.entityframeworkcore.abstractions.9.0.4.nupkg.sha512",
+    "/home/aymen-khelifi/.nuget/packages/microsoft.entityframeworkcore.analyzers/9.0.4/microsoft.entityframeworkcore.analyzers.9.0.4.nupkg.sha512",
+    "/home/aymen-khelifi/.nuget/packages/microsoft.entityframeworkcore.inmemory/9.0.4/microsoft.entityframeworkcore.inmemory.9.0.4.nupkg.sha512",
+    "/home/aymen-khelifi/.nuget/packages/microsoft.extensions.caching.abstractions/9.0.4/microsoft.extensions.caching.abstractions.9.0.4.nupkg.sha512",
+    "/home/aymen-khelifi/.nuget/packages/microsoft.extensions.caching.memory/9.0.4/microsoft.extensions.caching.memory.9.0.4.nupkg.sha512",
+    "/home/aymen-khelifi/.nuget/packages/microsoft.extensions.dependencyinjection/9.0.4/microsoft.extensions.dependencyinjection.9.0.4.nupkg.sha512",
+    "/home/aymen-khelifi/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.4/microsoft.extensions.dependencyinjection.abstractions.9.0.4.nupkg.sha512",
+    "/home/aymen-khelifi/.nuget/packages/microsoft.extensions.logging/9.0.4/microsoft.extensions.logging.9.0.4.nupkg.sha512",
+    "/home/aymen-khelifi/.nuget/packages/microsoft.extensions.logging.abstractions/9.0.4/microsoft.extensions.logging.abstractions.9.0.4.nupkg.sha512",
+    "/home/aymen-khelifi/.nuget/packages/microsoft.extensions.options/9.0.4/microsoft.extensions.options.9.0.4.nupkg.sha512",
+    "/home/aymen-khelifi/.nuget/packages/microsoft.extensions.primitives/9.0.4/microsoft.extensions.primitives.9.0.4.nupkg.sha512",
     "/home/aymen-khelifi/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
     "/home/aymen-khelifi/.nuget/packages/system.codedom/7.0.0/system.codedom.7.0.0.nupkg.sha512",
     "/home/aymen-khelifi/.nuget/packages/system.management/7.0.2/system.management.7.0.2.nupkg.sha512"

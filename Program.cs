@@ -2,33 +2,58 @@ using Mazzika.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Mvc;
+using Mazzika.Models;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using Mazzika.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-var apiKey = builder.Configuration["YouTube:ApiKey"] ?? 
-    throw new InvalidOperationException("YouTube API key not configured");
+// Configure YouTube API service
+var apiKey = builder.Configuration["YouTube:ApiKey"] 
+    ?? throw new InvalidOperationException("YouTube API key not configured");
 builder.Services.AddSingleton<YouTubeService>(new YouTubeService(apiKey));
+
+// Configure Authentication
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = "Cookies";
-    options.DefaultChallengeScheme = "Google";
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
 })
-.AddCookie("Cookies")
-.AddGoogle("Google", options =>
+.AddCookie()
+.AddGoogle(options =>
 {
     options.ClientId = builder.Configuration["Google:ClientId"] 
-        ?? throw new InvalidOperationException("Missing ClientId");
+        ?? throw new InvalidOperationException("Google ClientId not configured");
     options.ClientSecret = builder.Configuration["Google:ClientSecret"] 
-        ?? throw new InvalidOperationException("Missing ClientSecret");
+        ?? throw new InvalidOperationException("Google ClientSecret not configured");
     options.Scope.Add("https://www.googleapis.com/auth/youtube.readonly");
 
-    // Manually add the picture claim from the payload
-    options.ClaimActions.Add(new Microsoft.AspNetCore.Authentication.OAuth.Claims.JsonKeyClaimAction(
-        "urn:google:picture", "string", "picture"));
+    // Add custom claims using OnCreatingTicket
+    options.Events = new OAuthEvents
+    {
+        OnCreatingTicket = context =>
+        {
+            if (context.User.TryGetProperty("picture", out var pictureElement))
+            {
+                var picture = pictureElement.GetString();
+                if (!string.IsNullOrEmpty(picture))
+                {
+                    context.Identity.AddClaim(new System.Security.Claims.Claim("urn:google:picture", picture));
+                }
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
+
+// Configure in-memory database
+builder.Services.AddDbContext<MusicDbContext>(options =>
+    options.UseInMemoryDatabase("MusicDb"));
 
 var app = builder.Build();
 
@@ -48,6 +73,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Map default routes
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
