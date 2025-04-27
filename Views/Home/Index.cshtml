@@ -1,4 +1,5 @@
 ﻿@model List<Mazzika.Models.Video>
+@inject Mazzika.Controllers.MusicDbContext DbContext
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -9,9 +10,10 @@
         color: #fff;
     }
     .card {
-        background-color: #1e1e1e;
-        border: none;
-        border-radius: 15px;
+        background-color: rgba(30, 30, 30, 0.6);
+        backdrop-filter: blur(10px);
+        border-radius: 8px;
+        overflow: hidden;
         transition: transform 0.2s;
     }
     .card:hover {
@@ -50,9 +52,79 @@
     #progress {
         width: 100%;
     }
+    .mix-overlay {
+        background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .card:hover .mix-overlay {
+        opacity: 1;
+    }
+    .card-img-container {
+        overflow: hidden;
+    }
+    .rounded-circle {
+        aspect-ratio: 1;
+        object-fit: cover;
+    }
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+    }
+    .see-all {
+        color: #1db954;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .see-all:hover {
+        text-decoration: underline;
+        color: #1ed760;
+    }
+    .play-count {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .music-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+    .card-img-top {
+        aspect-ratio: 16/9;
+        object-fit: cover;
+    }
+    .card-body {
+        padding: 1rem;
+    }
+    .card-title {
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        line-height: 1.3;
+    }
+    .card-text {
+        font-size: 0.8rem;
+        opacity: 0.7;
+    }
 </style>
 
-<div class="container mt-5 mb-5">
+<div class="container-fluid mt-4 px-4">
     <form method="get" asp-action="Index" class="search-bar">
         <div class="input-group">
             <input type="text" name="searchQuery" class="form-control" placeholder="Search for songs..." value="@ViewBag.SearchQuery">
@@ -60,18 +132,103 @@
         </div>
     </form>
 
-    <div class="row">
-        @foreach (var video in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card" onclick="playVideo('@video.Id', '@video.Title', '@video.ThumbnailUrl')">
-                    <img src="@video.ThumbnailUrl" class="card-img-top" alt="@video.Title" style="object-fit: cover; width: 100%; height: 200px;" />
+    <div class="quick-picks mb-5">
+        <div class="section-header">
+            <h2 class="section-title">Quick picks</h2>
+            <a href="#" class="see-all">See all</a>
+        </div>
+        <div class="music-grid">
+            @foreach (var video in Model.Take(6))
+            {
+                <div class="card h-100" data-video-id="@video.Id" data-title="@video.Title" 
+                     data-description="@video.Description" data-thumbnail="@video.ThumbnailUrl" 
+                     data-published-at="@video.PublishedAt" data-channel-title="@video.ChannelTitle">
+                    <div class="position-relative">
+                        <img src="@video.ThumbnailUrl" class="card-img-top" alt="@video.Title">
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">@video.Title</h5>
+                        <h5 class="card-title text-truncate">@video.Title</h5>
+                        <p class="card-text">@video.ChannelTitle</p>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
+    </div>
+
+    <div class="mixed-for-you mb-5">
+        <div class="section-header">
+            <h2 class="section-title">Mixed for you</h2>
+            <a href="#" class="see-all">Explore mixes</a>
+        </div>
+        <div class="music-grid">
+            @foreach (var video in Model.Skip(6).Take(6))
+            {
+                <div class="card h-100" data-video-id="@video.Id" data-title="@video.Title" 
+                     data-description="@video.Description" data-thumbnail="@video.ThumbnailUrl" 
+                     data-published-at="@video.PublishedAt" data-channel-title="@video.ChannelTitle">
+                    <div class="card-img-container position-relative">
+                        <img src="@video.ThumbnailUrl" class="card-img-top" alt="@video.Title">
+                        <div class="mix-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                            <i class="bi bi-collection-play text-light" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Mix - @video.ChannelTitle</h5>
+                        <p class="card-text">Based on your listening history</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="recommended-artists mb-5">
+        <div class="section-header">
+            <h2 class="section-title">Recommended artists</h2>
+            <a href="#" class="see-all">See all</a>
+        </div>
+        <div class="music-grid">
+            @foreach (var video in Model.Skip(12).Take(6))
+            {
+                <div class="card h-100" data-video-id="@video.Id" data-title="@video.Title" 
+                     data-description="@video.Description" data-thumbnail="@video.ThumbnailUrl" 
+                     data-published-at="@video.PublishedAt" data-channel-title="@video.ChannelTitle">
+                    <div class="card-img-container position-relative">
+                        <img src="@video.ThumbnailUrl" class="card-img-top rounded-circle" alt="@video.ChannelTitle">
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">@video.ChannelTitle</h5>
+                        <p class="card-text">Artist</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="top-tracks mb-5">
+        <div class="section-header">
+            <h2 class="section-title">Your Top Tracks</h2>
+            <a href="/Music/TopTracks" class="see-all">View all</a>
+        </div>
+        <div class="music-grid">
+            @foreach (var track in DbContext.TopTracks.OrderByDescending(t => t.PlayCount).Take(6))
+            {
+                <div class="card h-100" data-video-id="@track.VideoId" data-title="@track.Title" 
+                     data-description="@track.Description" data-thumbnail="@track.ThumbnailUrl" 
+                     data-published-at="@track.PublishedAt" data-channel-title="@track.ChannelTitle">
+                    <div class="position-relative">
+                        <img src="@track.ThumbnailUrl" class="card-img-top" alt="@track.Title">
+                        <div class="play-count">
+                            <i class="bi bi-play-fill"></i>
+                            <span>@track.PlayCount</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-truncate">@track.Title</h5>
+                        <p class="card-text">@track.ChannelTitle</p>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
 
@@ -185,6 +342,19 @@
         progressSlider.addEventListener('change', () => {
             player.seekTo(progressSlider.value, true);
             isSeeking = false;
+        });
+
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function() {
+                playVideo(
+                    this.dataset.videoId,
+                    this.dataset.title,
+                    this.dataset.description,
+                    this.dataset.thumbnail,
+                    this.dataset.publishedAt,
+                    this.dataset.channelTitle
+                );
+            });
         });
     });
 

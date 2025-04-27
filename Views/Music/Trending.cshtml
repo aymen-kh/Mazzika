@@ -1,6 +1,25 @@
-@{
-    ViewData["Title"] = "Trending Music";
-}
+@model List<Mazzika.Models.Video>
 
 <h1>Trending Music</h1>
-<p>Display trending music here.</p>
+
+@if (ViewBag.Message != null)
+{
+    <p>@ViewBag.Message</p>
+}
+else if (Model != null && Model.Any())
+{
+    <ul>
+        @foreach (var video in Model)
+        {
+            <li>
+                <img src="@video.ThumbnailUrl" alt="@video.Title" style="width: 100px; height: auto;" />
+                <strong>@video.Title</strong>
+                <p>@video.Description</p>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No trending music available at the moment.</p>
+}

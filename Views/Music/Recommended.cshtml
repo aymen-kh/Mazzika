@@ -1,6 +1,334 @@
+@model List<Mazzika.Models.Video>
+
 @{
     ViewData["Title"] = "Recommended Music";
 }
 
-<h1>Recommended Music</h1>
-<p>Display recommended music here.</p>
+<div class="container-fluid mt-4">
+    <!-- Category filters -->
+    <div class="category-filters mb-4 d-flex overflow-auto">
+        <button class="btn btn-dark me-2 active">All</button>
+        <button class="btn btn-outline-dark me-2">Music</button>
+        <button class="btn btn-outline-dark me-2">Arabic Music</button>
+        <button class="btn btn-outline-dark me-2">Mixes</button>
+        <button class="btn btn-outline-dark me-2">Albums</button>
+        <button class="btn btn-outline-dark me-2">Cheb Mami</button>
+        <button class="btn btn-outline-dark me-2">French hip hop music</button>
+        <button class="btn btn-outline-dark me-2">Contemporary R&B</button>
+        <button class="btn btn-outline-dark me-2">Harps</button>
+        <button class="btn btn-outline-dark me-2">Live</button>
+        <button class="btn btn-outline-dark me-2">Disco</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.LoginMessage))
+    {
+        <div class="alert alert-info">
+            <p>@ViewBag.LoginMessage</p>
+            <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Login with YouTube</a>
+        </div>
+    }
+    else if (Model != null && Model.Any())
+    {
+        <!-- Recently played section -->
+        <div class="mb-5">
+            <h5 class="mb-3">Recently played</h5>
+            <div class="row">
+                @foreach (var video in Model.Take(6))
+                {
+                    <div class="col-md-2 mb-4">
+                        <div class="card h-100 border-0">
+                            <div class="position-relative">
+                                <img src="@video.ThumbnailUrl" class="card-img-top rounded" alt="@video.Title">
+                                <div class="position-absolute bottom-0 end-0 p-2">
+                                    <span class="badge bg-dark">3:45</span>
+                                </div>
+                            </div>
+                            <div class="card-body px-0 py-2">
+                                <h6 class="card-title mb-1">@video.Title</h6>
+                                <p class="card-text text-muted small mb-0">@video.ChannelTitle</p>
+                                <p class="card-text text-muted small">387K views • @((DateTime.Now - video.PublishedAt).Days) days ago</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Mix section -->
+        <div class="mb-5">
+            <h5 class="mb-3">Mix - Arabic Music</h5>
+            <div class="row">
+                @foreach (var video in Model.Skip(6).Take(6))
+                {
+                    <div class="col-md-2 mb-4">
+                        <div class="card h-100 border-0">
+                            <div class="position-relative">
+                                <img src="@video.ThumbnailUrl" class="card-img-top rounded" alt="@video.Title">
+                                <div class="position-absolute bottom-0 end-0 p-2">
+                                    <span class="badge bg-dark">3:45</span>
+                                </div>
+                            </div>
+                            <div class="card-body px-0 py-2">
+                                <h6 class="card-title mb-1">@video.Title</h6>
+                                <p class="card-text text-muted small mb-0">@video.ChannelTitle</p>
+                                <p class="card-text text-muted small">Mix • Arabic Music</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Trending section -->
+        <div class="mb-5">
+            <h5 class="mb-3">Trending in Tunisia</h5>
+            <div class="row">
+                @foreach (var video in Model.Skip(12).Take(6))
+                {
+                    <div class="col-md-2 mb-4">
+                        <div class="card h-100 border-0">
+                            <div class="position-relative">
+                                <img src="@video.ThumbnailUrl" class="card-img-top rounded" alt="@video.Title">
+                                <div class="position-absolute bottom-0 end-0 p-2">
+                                    <span class="badge bg-dark">3:45</span>
+                                </div>
+                            </div>
+                            <div class="card-body px-0 py-2">
+                                <h6 class="card-title mb-1">@video.Title</h6>
+                                <p class="card-text text-muted small mb-0">@video.ChannelTitle</p>
+                                <p class="card-text text-muted small">231K views • Trending</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <p>No recommended videos available at the moment.</p>
+            <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Sign in for personalized recommendations</a>
+        </div>
+    }
+</div>
+
+<style>
+    .category-filters {
+        white-space: nowrap;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .category-filters::-webkit-scrollbar {
+        display: none;
+    }
+
+    .card {
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        cursor: pointer;
+    }
+
+    .card-title {
+        font-size: 0.9rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+</style>
+
+<!-- Player Bar (same as in other views) -->
+<div id="player-bar" style="display: none;">
+    <div id="controls">
+        <img id="player-thumbnail" src="" alt="Thumbnail" width="60" height="60" class="rounded">
+        <div id="song-info">
+            <div id="song-title"></div>
+        </div>
+        <button class="btn btn-link text-light" onclick="prevSong()">
+            <i class="bi bi-skip-start-fill" style="font-size: 1.8rem;"></i>
+        </button>
+        <button class="btn btn-link text-light" onclick="togglePlay()">
+            <i id="play-pause-icon" class="bi bi-play-fill" style="font-size: 2rem;"></i>
+        </button>
+        <button class="btn btn-link text-light" onclick="nextSong()">
+            <i class="bi bi-skip-end-fill" style="font-size: 1.8rem;"></i>
+        </button>
+    </div>
+    <div id="progress-container">
+        <div class="d-flex justify-content-between">
+            <span id="current-time">0:00</span>
+            <span id="total-duration">0:00</span>
+        </div>
+        <input type="range" id="progress" value="0" step="1">
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Add click handlers for video cards
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function() {
+                const videoData = {
+                    id: this.dataset.videoId,
+                    title: this.dataset.title,
+                    description: this.dataset.description,
+                    thumbnailUrl: this.dataset.thumbnail,
+                    publishedAt: this.dataset.publishedAt,
+                    channelTitle: this.dataset.channelTitle
+                };
+                playVideo(videoData.id, videoData.title, videoData.description, videoData.thumbnailUrl, videoData.publishedAt, videoData.channelTitle);
+            });
+        });
+
+        // Add click handlers for category filters
+        document.querySelectorAll('.category-filters .btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.category-filters .btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.remove('btn-dark');
+                    btn.classList.add('btn-outline-dark');
+                });
+                
+                // Add active class to clicked button
+                this.classList.remove('btn-outline-dark');
+                this.classList.add('btn-dark');
+                this.classList.add('active');
+                
+                // TODO: Add filtering logic here
+            });
+        });
+
+        // Your existing player code
+        let playlist = [];
+        let playlistTitles = [];
+        let playlistThumbs = [];
+        let currentIndex = 0;
+        let player;
+        let playPauseIcon;
+        let progressSlider;
+        let isSeeking = false;
+        let updateInterval;
+
+        function playVideo(videoId, title, description, thumbnailUrl, publishedAt, channelTitle) {
+            // Add to playlist
+            playlist.push(videoId);
+            playlistTitles.push(title);
+            playlistThumbs.push(thumbnailUrl);
+            currentIndex = playlist.length - 1;
+
+            // Initialize or load video
+            if (!player) {
+                player = new YT.Player('player', {
+                    height: '0',
+                    width: '0',
+                    videoId: videoId,
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+            } else {
+                player.loadVideoById(videoId);
+            }
+
+            // Update UI
+            document.getElementById('player-thumbnail').src = thumbnailUrl;
+            document.getElementById('song-title').innerText = title;
+            document.getElementById('player-bar').style.display = 'flex';
+
+            // Track play
+            fetch('/Music/AddToTopTracks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: videoId,
+                    title: title,
+                    description: description,
+                    thumbnailUrl: thumbnailUrl,
+                    publishedAt: publishedAt,
+                    channelTitle: channelTitle
+                })
+            });
+        }
+
+        function onPlayerReady(event) {
+            playPauseIcon = document.getElementById('play-pause-icon');
+            progressSlider = document.getElementById('progress');
+            event.target.playVideo();
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.PLAYING) {
+                startUpdatingProgress();
+                playPauseIcon.className = 'bi bi-pause-fill';
+            } else {
+                playPauseIcon.className = 'bi bi-play-fill';
+            }
+        }
+
+        function togglePlay() {
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        }
+
+        function nextSong() {
+            currentIndex = (currentIndex + 1) % playlist.length;
+            loadVideo(currentIndex, true);
+        }
+
+        function prevSong() {
+            currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+            loadVideo(currentIndex, true);
+        }
+
+        function loadVideo(index, autoplay = false) {
+            const id = playlist[index];
+            const title = playlistTitles[index];
+            const thumbnail = playlistThumbs[index];
+
+            document.getElementById('player-thumbnail').src = thumbnail;
+            document.getElementById('song-title').innerText = title;
+            
+            player.loadVideoById(id);
+            if (!autoplay) {
+                player.pauseVideo();
+            }
+        }
+
+        function startUpdatingProgress() {
+            clearInterval(updateInterval);
+            updateInterval = setInterval(() => {
+                if (player && player.getDuration) {
+                    const duration = player.getDuration();
+                    const currentTime = player.getCurrentTime();
+
+                    if (!isSeeking) {
+                        progressSlider.max = duration;
+                        progressSlider.value = currentTime;
+
+                        document.getElementById('current-time').textContent = formatTime(currentTime);
+                        document.getElementById('total-duration').textContent = formatTime(duration);
+                    }
+                }
+            }, 500);
+        }
+
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60).toString().padStart(2, '0');
+            return `${min}:${sec}`;
+        }
+    </script>
+}

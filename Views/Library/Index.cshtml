@@ -1,30 +1,149 @@
 @model List<Mazzika.Models.Video>
 
-@{
-    ViewData["Title"] = "Library";
-}
+<div class="library-header mb-5">
+    <div class="d-flex align-items-center mb-4">
+        <h1 class="h4 mb-0">Library</h1>
+        <div class="ms-auto">
+            <button class="btn btn-outline-light btn-sm">
+                <i class="bi bi-filter"></i> Sort
+            </button>
+        </div>
+    </div>
 
-<h1>Your Library</h1>
+    <div class="library-filters d-flex gap-3 pb-3 border-bottom border-secondary">
+        <button class="btn btn-link text-light px-0 active">Playlists</button>
+        <button class="btn btn-link text-light px-0">Songs</button>
+        <button class="btn btn-link text-light px-0">Albums</button>
+        <button class="btn btn-link text-light px-0">Artists</button>
+    </div>
+</div>
 
-@if (Model == null || !Model.Any())
+@if (!Model.Any())
 {
-    <p>No videos found in your library.</p>
+    <div class="text-center py-5">
+        <i class="bi bi-music-note-list" style="font-size: 3rem;"></i>
+        <h2 class="h5 mt-3">Your library is empty</h2>
+        <p class="text-muted">Songs and playlists you add will appear here</p>
+        <a asp-controller="Music" asp-action="Recommended" class="btn btn-primary mt-3">
+            Discover music
+        </a>
+    </div>
 }
 else
 {
-    <div class="row">
-        @foreach (var video in Model)
+    <div class="music-grid">
+        <!-- Recent Activity -->
+        <div class="recent-activity card h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-clock-history me-2"></i> Recent Activity
+                </h5>
+                <div class="recent-tracks mt-3">
+                    @foreach (var video in Model.Take(5))
+                    {
+                        <div class="track d-flex align-items-center p-2 rounded hover-bg" 
+                             data-video-id="@video.Id" data-title="@video.Title"
+                             data-description="@video.Description" data-thumbnail="@video.ThumbnailUrl"
+                             data-published-at="@video.PublishedAt" data-channel-title="@video.ChannelTitle">
+                            <img src="@video.ThumbnailUrl" class="rounded" width="40" height="40" alt="@video.Title">
+                            <div class="ms-3">
+                                <div class="text-truncate">@video.Title</div>
+                                <small class="text-muted">@video.ChannelTitle</small>
+                            </div>
+                            <div class="ms-auto">
+                                <button class="btn btn-link text-light" onclick="playVideo('@video.Id', '@video.Title', '@video.Description', '@video.ThumbnailUrl', '@video.PublishedAt', '@video.ChannelTitle')">
+                                    <i class="bi bi-play-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Playlists -->
+        @foreach (var video in Model.Skip(5))
         {
-            <div class="col-md-4">
-                <div class="card mb-3">
+            <div class="card h-100" data-video-id="@video.Id" data-title="@video.Title"
+                 data-description="@video.Description" data-thumbnail="@video.ThumbnailUrl"
+                 data-published-at="@video.PublishedAt" data-channel-title="@video.ChannelTitle">
+                <div class="card-img-container position-relative">
                     <img src="@video.ThumbnailUrl" class="card-img-top" alt="@video.Title">
-                    <div class="card-body">
-                        <h5 class="card-title">@video.Title</h5>
-                        <p class="card-text">@video.Description</p>
-                        <p class="card-text"><small class="text-muted">Published on @video.PublishedAt.ToShortDateString()</small></p>
+                    <div class="play-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-play-circle-fill text-light" style="font-size: 3rem;"></i>
                     </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-truncate">@video.Title</h5>
+                    <p class="card-text text-muted small">
+                        <i class="bi bi-music-note-beamed me-1"></i> Playlist • @video.ChannelTitle
+                    </p>
                 </div>
             </div>
         }
     </div>
+}
+
+<style>
+    .library-filters .btn-link {
+        text-decoration: none;
+        position: relative;
+    }
+
+    .library-filters .btn-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--text-primary);
+    }
+
+    .hover-bg:hover {
+        background-color: var(--hover-bg);
+        cursor: pointer;
+    }
+
+    .play-overlay {
+        background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .card:hover .play-overlay {
+        opacity: 1;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        // Handle library filter clicks
+        document.querySelectorAll('.library-filters .btn-link').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.library-filters .btn-link').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
+        // Handle track clicks
+        document.querySelectorAll('.track').forEach(track => {
+            track.addEventListener('click', function(e) {
+                if (!e.target.closest('.btn')) {
+                    const { videoId, title, description, thumbnail, publishedAt, channelTitle } = this.dataset;
+                    playVideo(videoId, title, description, thumbnail, publishedAt, channelTitle);
+                }
+            });
+        });
+
+        // Handle playlist clicks
+        document.querySelectorAll('.card:not(.recent-activity)').forEach(card => {
+            card.addEventListener('click', function() {
+                const { videoId, title, description, thumbnail, publishedAt, channelTitle } = this.dataset;
+                playVideo(videoId, title, description, thumbnail, publishedAt, channelTitle);
+            });
+        });
+    </script>
 }

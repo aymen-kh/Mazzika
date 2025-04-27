@@ -29,7 +29,6 @@
 /home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/scopedcss/Views/Shared/_Layout.cshtml.rz.scp.css
 /home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/scopedcss/bundle/Mazzika.styles.css
 /home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/scopedcss/projectbundle/Mazzika.bundle.scp.css
-/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/gd5t7ln24b-lugek5hnai.gz
 /home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/2zkaeyyvkp-61n19gt1b8.gz
 /home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/3ribol664w-5mhi10avvq.gz
 /home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/y1pe9xum3o-bqjiyaj88i.gz
@@ -119,3 +118,4 @@
 /home/aymen-khelifi/tryTo/Mazzika/bin/Debug/net9.0/Microsoft.Extensions.Logging.Abstractions.dll
 /home/aymen-khelifi/tryTo/Mazzika/bin/Debug/net9.0/Microsoft.Extensions.Options.dll
 /home/aymen-khelifi/tryTo/Mazzika/bin/Debug/net9.0/Microsoft.Extensions.Primitives.dll
+/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/gd5t7ln24b-m1cvvqrbie.gz

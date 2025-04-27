@@ -16,7 +16,16 @@ builder.Services.AddControllersWithViews();
 // Configure YouTube API service
 var apiKey = builder.Configuration["YouTube:ApiKey"] 
     ?? throw new InvalidOperationException("YouTube API key not configured");
-builder.Services.AddSingleton<YouTubeService>(new YouTubeService(apiKey));
+var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+var logger = loggerFactory.CreateLogger<YouTubeService>();
+builder.Services.AddScoped<IYouTubeService>(provider => new YouTubeService(apiKey, provider.GetRequiredService<ILogger<YouTubeService>>()));
+
+// Configure Cookie Policy
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.Lax;
+});
 
 // Configure Authentication
 builder.Services.AddAuthentication(options =>
@@ -24,28 +33,40 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
 })
-.AddCookie()
+.AddCookie(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.Lax;
+})
 .AddGoogle(options =>
 {
     options.ClientId = builder.Configuration["Google:ClientId"] 
         ?? throw new InvalidOperationException("Google ClientId not configured");
     options.ClientSecret = builder.Configuration["Google:ClientSecret"] 
         ?? throw new InvalidOperationException("Google ClientSecret not configured");
+    options.SaveTokens = true;
     options.Scope.Add("https://www.googleapis.com/auth/youtube.readonly");
 
-    // Add custom claims using OnCreatingTicket
     options.Events = new OAuthEvents
     {
         OnCreatingTicket = context =>
         {
+            if (context.AccessToken != null)
+            {
+                context.Identity?.AddClaim(new System.Security.Claims.Claim("access_token", context.AccessToken));
+            }
             if (context.User.TryGetProperty("picture", out var pictureElement))
             {
                 var picture = pictureElement.GetString();
                 if (!string.IsNullOrEmpty(picture))
                 {
-                    context.Identity.AddClaim(new System.Security.Claims.Claim("urn:google:picture", picture));
+                    context.Identity?.AddClaim(new System.Security.Claims.Claim("urn:google:picture", picture));
                 }
             }
+            return Task.CompletedTask;
+        },
+        OnTicketReceived = context =>
+        {
+            context.ReturnUri = "/Music/Trending";
             return Task.CompletedTask;
         }
     };
