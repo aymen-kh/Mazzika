@@ -36,17 +36,18 @@
                 @foreach (var video in Model.Take(6))
                 {
                     <div class="col-md-2 mb-4">
-                        <div class="card h-100 border-0">
+                        <div class="card h-100 border-0" data-video-id="@video.Id" data-title="@video.Title" 
+                             data-description="@video.Description" data-thumbnail="@video.ThumbnailUrl" 
+                             data-published-at="@video.PublishedAt" data-channel-title="@video.ChannelTitle">
                             <div class="position-relative">
                                 <img src="@video.ThumbnailUrl" class="card-img-top rounded" alt="@video.Title">
-                                <div class="position-absolute bottom-0 end-0 p-2">
-                                    <span class="badge bg-dark">3:45</span>
+                                <div class="play-overlay">
+                                    <i class="bi bi-play-circle-fill"></i>
                                 </div>
                             </div>
                             <div class="card-body px-0 py-2">
                                 <h6 class="card-title mb-1">@video.Title</h6>
                                 <p class="card-text text-muted small mb-0">@video.ChannelTitle</p>
-                                <p class="card-text text-muted small">387K views • @((DateTime.Now - video.PublishedAt).Days) days ago</p>
                             </div>
                         </div>
                     </div>
@@ -61,17 +62,18 @@
                 @foreach (var video in Model.Skip(6).Take(6))
                 {
                     <div class="col-md-2 mb-4">
-                        <div class="card h-100 border-0">
+                        <div class="card h-100 border-0" data-video-id="@video.Id" data-title="@video.Title" 
+                             data-description="@video.Description" data-thumbnail="@video.ThumbnailUrl" 
+                             data-published-at="@video.PublishedAt" data-channel-title="@video.ChannelTitle">
                             <div class="position-relative">
                                 <img src="@video.ThumbnailUrl" class="card-img-top rounded" alt="@video.Title">
-                                <div class="position-absolute bottom-0 end-0 p-2">
-                                    <span class="badge bg-dark">3:45</span>
+                                <div class="play-overlay">
+                                    <i class="bi bi-play-circle-fill"></i>
                                 </div>
                             </div>
                             <div class="card-body px-0 py-2">
                                 <h6 class="card-title mb-1">@video.Title</h6>
                                 <p class="card-text text-muted small mb-0">@video.ChannelTitle</p>
-                                <p class="card-text text-muted small">Mix • Arabic Music</p>
                             </div>
                         </div>
                     </div>
@@ -86,17 +88,18 @@
                 @foreach (var video in Model.Skip(12).Take(6))
                 {
                     <div class="col-md-2 mb-4">
-                        <div class="card h-100 border-0">
+                        <div class="card h-100 border-0" data-video-id="@video.Id" data-title="@video.Title" 
+                             data-description="@video.Description" data-thumbnail="@video.ThumbnailUrl" 
+                             data-published-at="@video.PublishedAt" data-channel-title="@video.ChannelTitle">
                             <div class="position-relative">
                                 <img src="@video.ThumbnailUrl" class="card-img-top rounded" alt="@video.Title">
-                                <div class="position-absolute bottom-0 end-0 p-2">
-                                    <span class="badge bg-dark">3:45</span>
+                                <div class="play-overlay">
+                                    <i class="bi bi-play-circle-fill"></i>
                                 </div>
                             </div>
                             <div class="card-body px-0 py-2">
                                 <h6 class="card-title mb-1">@video.Title</h6>
                                 <p class="card-text text-muted small mb-0">@video.ChannelTitle</p>
-                                <p class="card-text text-muted small">231K views • Trending</p>
                             </div>
                         </div>
                     </div>
@@ -141,51 +144,25 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
     }
-</style>
 
-<!-- Player Bar (same as in other views) -->
-<div id="player-bar" style="display: none;">
-    <div id="controls">
-        <img id="player-thumbnail" src="" alt="Thumbnail" width="60" height="60" class="rounded">
-        <div id="song-info">
-            <div id="song-title"></div>
-        </div>
-        <button class="btn btn-link text-light" onclick="prevSong()">
-            <i class="bi bi-skip-start-fill" style="font-size: 1.8rem;"></i>
-        </button>
-        <button class="btn btn-link text-light" onclick="togglePlay()">
-            <i id="play-pause-icon" class="bi bi-play-fill" style="font-size: 2rem;"></i>
-        </button>
-        <button class="btn btn-link text-light" onclick="nextSong()">
-            <i class="bi bi-skip-end-fill" style="font-size: 1.8rem;"></i>
-        </button>
-    </div>
-    <div id="progress-container">
-        <div class="d-flex justify-content-between">
-            <span id="current-time">0:00</span>
-            <span id="total-duration">0:00</span>
-        </div>
-        <input type="range" id="progress" value="0" step="1">
-    </div>
-</div>
+    .play-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2rem;
+        color: white;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .card:hover .play-overlay {
+        opacity: 1;
+    }
+</style>
 
 @section Scripts {
     <script>
-        // Add click handlers for video cards
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', function() {
-                const videoData = {
-                    id: this.dataset.videoId,
-                    title: this.dataset.title,
-                    description: this.dataset.description,
-                    thumbnailUrl: this.dataset.thumbnail,
-                    publishedAt: this.dataset.publishedAt,
-                    channelTitle: this.dataset.channelTitle
-                };
-                playVideo(videoData.id, videoData.title, videoData.description, videoData.thumbnailUrl, videoData.publishedAt, videoData.channelTitle);
-            });
-        });
-
         // Add click handlers for category filters
         document.querySelectorAll('.category-filters .btn').forEach(button => {
             button.addEventListener('click', function() {
@@ -200,30 +177,23 @@
                 this.classList.remove('btn-outline-dark');
                 this.classList.add('btn-dark');
                 this.classList.add('active');
-                
-                // TODO: Add filtering logic here
             });
         });
 
-        // Your existing player code
-        let playlist = [];
-        let playlistTitles = [];
-        let playlistThumbs = [];
-        let currentIndex = 0;
-        let player;
-        let playPauseIcon;
-        let progressSlider;
-        let isSeeking = false;
-        let updateInterval;
-
         function playVideo(videoId, title, description, thumbnailUrl, publishedAt, channelTitle) {
-            // Add to playlist
-            playlist.push(videoId);
-            playlistTitles.push(title);
-            playlistThumbs.push(thumbnailUrl);
-            currentIndex = playlist.length - 1;
+            if (!playlist.includes(videoId)) {
+                playlist.push(videoId);
+                playlistTitles.push(title);
+                playlistThumbs.push(thumbnailUrl);
+                currentIndex = playlist.length - 1;
+            }
 
-            // Initialize or load video
+            // Update UI
+            document.getElementById('player-thumbnail').src = thumbnailUrl;
+            document.getElementById('song-title').innerText = title;
+            document.getElementById('player-bar').style.display = 'flex';
+
+            // Play video
             if (!player) {
                 player = new YT.Player('player', {
                     height: '0',
@@ -238,12 +208,7 @@
                 player.loadVideoById(videoId);
             }
 
-            // Update UI
-            document.getElementById('player-thumbnail').src = thumbnailUrl;
-            document.getElementById('song-title').innerText = title;
-            document.getElementById('player-bar').style.display = 'flex';
-
-            // Track play
+            // Track play count
             fetch('/Music/AddToTopTracks', {
                 method: 'POST',
                 headers: {
@@ -257,78 +222,13 @@
                     publishedAt: publishedAt,
                     channelTitle: channelTitle
                 })
-            });
-        }
-
-        function onPlayerReady(event) {
-            playPauseIcon = document.getElementById('play-pause-icon');
-            progressSlider = document.getElementById('progress');
-            event.target.playVideo();
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.PLAYING) {
-                startUpdatingProgress();
-                playPauseIcon.className = 'bi bi-pause-fill';
-            } else {
-                playPauseIcon.className = 'bi bi-play-fill';
-            }
-        }
-
-        function togglePlay() {
-            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-                player.pauseVideo();
-            } else {
-                player.playVideo();
-            }
-        }
-
-        function nextSong() {
-            currentIndex = (currentIndex + 1) % playlist.length;
-            loadVideo(currentIndex, true);
-        }
-
-        function prevSong() {
-            currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
-            loadVideo(currentIndex, true);
-        }
-
-        function loadVideo(index, autoplay = false) {
-            const id = playlist[index];
-            const title = playlistTitles[index];
-            const thumbnail = playlistThumbs[index];
-
-            document.getElementById('player-thumbnail').src = thumbnail;
-            document.getElementById('song-title').innerText = title;
-            
-            player.loadVideoById(id);
-            if (!autoplay) {
-                player.pauseVideo();
-            }
-        }
-
-        function startUpdatingProgress() {
-            clearInterval(updateInterval);
-            updateInterval = setInterval(() => {
-                if (player && player.getDuration) {
-                    const duration = player.getDuration();
-                    const currentTime = player.getCurrentTime();
-
-                    if (!isSeeking) {
-                        progressSlider.max = duration;
-                        progressSlider.value = currentTime;
-
-                        document.getElementById('current-time').textContent = formatTime(currentTime);
-                        document.getElementById('total-duration').textContent = formatTime(duration);
-                    }
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            }, 500);
-        }
-
-        function formatTime(seconds) {
-            const min = Math.floor(seconds / 60);
-            const sec = Math.floor(seconds % 60).toString().padStart(2, '0');
-            return `${min}:${sec}`;
+            }).catch(error => {
+                console.error('Error updating play count:', error);
+            });
         }
     </script>
 }

@@ -71,20 +71,50 @@ namespace Mazzika.Services
 
         public async Task<List<Video>> SearchVideosAsync(string query)
         {
-            var searchRequest = _youTubeService.Search.List("snippet");
-            searchRequest.Q = query;
-            searchRequest.MaxResults = 10;
-
-            var searchResponse = await searchRequest.ExecuteAsync();
-            return searchResponse.Items.Select(item => new Video
+            try
             {
-                Id = item.Id.VideoId,
-                Title = item.Snippet.Title,
-                Description = item.Snippet.Description,
-                ThumbnailUrl = item.Snippet.Thumbnails.High?.Url ?? item.Snippet.Thumbnails.Default__.Url,
-                PublishedAt = item.Snippet.PublishedAtDateTimeOffset?.DateTime ?? DateTime.Now,
-                ChannelTitle = item.Snippet.ChannelTitle
-            }).ToList();
+                _logger.LogInformation("Searching for videos with query: {Query}", query);
+
+                var searchRequest = _youTubeService.Search.List("snippet");
+                searchRequest.Q = query;
+                searchRequest.Type = "video"; // Ensure we only get videos
+                searchRequest.VideoCategoryId = "10"; // Music category
+                searchRequest.MaxResults = 10;
+
+                var searchResponse = await searchRequest.ExecuteAsync();
+
+                if (searchResponse?.Items == null || !searchResponse.Items.Any())
+                {
+                    _logger.LogWarning("No videos found for query: {Query}", query);
+                    return new List<Video>();
+                }
+
+                var videos = searchResponse.Items
+                    .Where(item => item.Id?.VideoId != null) // Ensure we have valid video IDs
+                    .Select(item => new Video
+                    {
+                        Id = item.Id.VideoId,
+                        Title = item.Snippet.Title,
+                        Description = item.Snippet.Description,
+                        ThumbnailUrl = item.Snippet.Thumbnails.High?.Url ?? item.Snippet.Thumbnails.Default__.Url,
+                        PublishedAt = item.Snippet.PublishedAtDateTimeOffset?.DateTime ?? DateTime.Now,
+                        ChannelTitle = item.Snippet.ChannelTitle
+                    })
+                    .ToList();
+
+                _logger.LogInformation("Found {Count} videos for query: {Query}", videos.Count, query);
+                foreach (var video in videos)
+                {
+                    _logger.LogDebug("Video ID: {VideoId}, Title: {Title}", video.Id, video.Title);
+                }
+
+                return videos;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error searching for videos with query: {Query}", query);
+                return new List<Video>();
+            }
         }
 
         public List<Video> GetTrendingVideos()
@@ -331,8 +361,6 @@ namespace Mazzika.Services
 
         public List<Video> GetRecommendedVideos()
         {
-            // Placeholder logic for recommended videos
-            // Replace this with actual logic if needed
             return new List<Video>
             {
                 new Video
@@ -342,8 +370,7 @@ namespace Mazzika.Services
                     Description = "Description for Recommended Video 1",
                     ThumbnailUrl = "https://via.placeholder.com/150",
                     PublishedAt = DateTime.Now,
-                    ChannelTitle = "Channel 1",
-                    PlayCount = 0
+                    ChannelTitle = "Channel 1"
                 },
                 new Video
                 {
@@ -352,8 +379,7 @@ namespace Mazzika.Services
                     Description = "Description for Recommended Video 2",
                     ThumbnailUrl = "https://via.placeholder.com/150",
                     PublishedAt = DateTime.Now,
-                    ChannelTitle = "Channel 2",
-                    PlayCount = 0
+                    ChannelTitle = "Channel 2"
                 }
             };
         }
@@ -544,6 +570,38 @@ namespace Mazzika.Services
             {
                 _logger.LogError(ex, "Error fetching home page videos for the logged-in user.");
                 return new List<Video>();
+            }
+        }
+
+        public async Task<Video?> GetVideoDetailsAsync(string videoId)
+        {
+            try
+            {
+                var videoRequest = _youTubeService.Videos.List("snippet");
+                videoRequest.Id = videoId;
+                
+                var response = await videoRequest.ExecuteAsync();
+                var videoItem = response.Items.FirstOrDefault();
+                
+                if (videoItem == null)
+                {
+                    return null;
+                }
+
+                return new Video
+                {
+                    Id = videoId,
+                    Title = videoItem.Snippet.Title,
+                    Description = videoItem.Snippet.Description,
+                    ThumbnailUrl = videoItem.Snippet.Thumbnails.High.Url,
+                    PublishedAt = videoItem.Snippet.PublishedAtDateTimeOffset?.DateTime ?? DateTime.UtcNow,
+                    ChannelTitle = videoItem.Snippet.ChannelTitle
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting video details from YouTube API for ID: {VideoId}", videoId);
+                throw;
             }
         }
     }

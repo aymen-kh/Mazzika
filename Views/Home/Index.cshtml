@@ -1,5 +1,5 @@
 ﻿@model List<Mazzika.Models.Video>
-@inject Mazzika.Controllers.MusicDbContext DbContext
+@inject Mazzika.Data.MusicDbContext DbContext
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -122,9 +122,21 @@
         font-size: 0.8rem;
         opacity: 0.7;
     }
+    .play-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2.5rem;
+        color: rgba(255, 255, 255, 0.8);
+        display: none;
+    }
+    .card:hover .play-overlay {
+        display: block;
+    }
 </style>
 
-<div class="container-fluid mt-4 px-4">
+<div class="container-fluid mt-4">
     <form method="get" asp-action="Index" class="search-bar">
         <div class="input-group">
             <input type="text" name="searchQuery" class="form-control" placeholder="Search for songs..." value="@ViewBag.SearchQuery">
@@ -145,59 +157,13 @@
                      data-published-at="@video.PublishedAt" data-channel-title="@video.ChannelTitle">
                     <div class="position-relative">
                         <img src="@video.ThumbnailUrl" class="card-img-top" alt="@video.Title">
+                        <div class="play-overlay">
+                            <i class="bi bi-play-circle-fill"></i>
+                        </div>
                     </div>
                     <div class="card-body">
                         <h5 class="card-title text-truncate">@video.Title</h5>
                         <p class="card-text">@video.ChannelTitle</p>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-
-    <div class="mixed-for-you mb-5">
-        <div class="section-header">
-            <h2 class="section-title">Mixed for you</h2>
-            <a href="#" class="see-all">Explore mixes</a>
-        </div>
-        <div class="music-grid">
-            @foreach (var video in Model.Skip(6).Take(6))
-            {
-                <div class="card h-100" data-video-id="@video.Id" data-title="@video.Title" 
-                     data-description="@video.Description" data-thumbnail="@video.ThumbnailUrl" 
-                     data-published-at="@video.PublishedAt" data-channel-title="@video.ChannelTitle">
-                    <div class="card-img-container position-relative">
-                        <img src="@video.ThumbnailUrl" class="card-img-top" alt="@video.Title">
-                        <div class="mix-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
-                            <i class="bi bi-collection-play text-light" style="font-size: 2rem;"></i>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Mix - @video.ChannelTitle</h5>
-                        <p class="card-text">Based on your listening history</p>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-
-    <div class="recommended-artists mb-5">
-        <div class="section-header">
-            <h2 class="section-title">Recommended artists</h2>
-            <a href="#" class="see-all">See all</a>
-        </div>
-        <div class="music-grid">
-            @foreach (var video in Model.Skip(12).Take(6))
-            {
-                <div class="card h-100" data-video-id="@video.Id" data-title="@video.Title" 
-                     data-description="@video.Description" data-thumbnail="@video.ThumbnailUrl" 
-                     data-published-at="@video.PublishedAt" data-channel-title="@video.ChannelTitle">
-                    <div class="card-img-container position-relative">
-                        <img src="@video.ThumbnailUrl" class="card-img-top rounded-circle" alt="@video.ChannelTitle">
-                    </div>
-                    <div class="card-body text-center">
-                        <h5 class="card-title">@video.ChannelTitle</h5>
-                        <p class="card-text">Artist</p>
                     </div>
                 </div>
             }
@@ -221,10 +187,39 @@
                             <i class="bi bi-play-fill"></i>
                             <span>@track.PlayCount</span>
                         </div>
+                        <div class="play-overlay">
+                            <i class="bi bi-play-circle-fill"></i>
+                        </div>
                     </div>
                     <div class="card-body">
                         <h5 class="card-title text-truncate">@track.Title</h5>
                         <p class="card-text">@track.ChannelTitle</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="recommended-artists mb-5">
+        <div class="section-header">
+            <h2 class="section-title">Recommended artists</h2>
+            <a href="#" class="see-all">See all</a>
+        </div>
+        <div class="music-grid">
+            @foreach (var video in Model.Skip(12).Take(6))
+            {
+                <div class="card h-100" data-video-id="@video.Id" data-title="@video.Title" 
+                     data-description="@video.Description" data-thumbnail="@video.ThumbnailUrl" 
+                     data-published-at="@video.PublishedAt" data-channel-title="@video.ChannelTitle">
+                    <div class="card-img-container position-relative">
+                        <img src="@video.ThumbnailUrl" class="card-img-top rounded-circle" alt="@video.ChannelTitle">
+                        <div class="play-overlay">
+                            <i class="bi bi-play-circle-fill"></i>
+                        </div>
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">@video.ChannelTitle</h5>
+                        <p class="card-text">Artist</p>
                     </div>
                 </div>
             }
@@ -268,9 +263,7 @@
 <div id="player" style="display:none;"></div>
 
 @section Scripts {
-<!-- Load YouTube IFrame Player API -->
-<script src="https://www.youtube.com/iframe_api"></script>
-
+<!-- Player initialization and event handlers -->
 <script>
     let playlist = [];
     let playlistTitles = [];
@@ -361,7 +354,36 @@
     function playVideo(videoId, title, description, thumbnailUrl, publishedAt, channelTitle) {
         console.log('Playing video:', { videoId, title, description, thumbnailUrl, publishedAt, channelTitle });
 
-        // Notify the server to add the video to top tracks
+        // Add to playlist
+        playlist.push(videoId);
+        playlistTitles.push(title);
+        playlistThumbs.push(thumbnailUrl);
+        currentIndex = playlist.length - 1;
+
+        // Initialize or load video
+        if (!player) {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                videoId: videoId,
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        } else {
+            player.loadVideoById({
+                videoId: videoId,
+                startSeconds: 0
+            });
+        }
+
+        // Update UI
+        document.getElementById('player-thumbnail').src = thumbnailUrl;
+        document.getElementById('song-title').innerText = title;
+        document.getElementById('player-bar').style.display = 'flex';
+
+        // Track play in database
         const video = {
             id: videoId,
             title: title,
@@ -387,13 +409,6 @@
         }).catch(error => {
             console.error('Error adding video to top tracks:', error);
         });
-
-        // Play the video
-        player.loadVideoById(videoId);
-        document.getElementById('player-thumbnail').src = thumbnailUrl;
-        document.getElementById('song-title').innerText = title;
-        document.getElementById('player-bar').style.display = 'flex';
-        player.playVideo();
     }
 
     function loadVideo(index, autoplay = false) {

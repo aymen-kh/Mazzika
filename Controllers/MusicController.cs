@@ -3,19 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mazzika.Models;
-using System.Linq;
-using System.Threading.Tasks;
 using Mazzika.Services;
+using Mazzika.Data;
 
 namespace Mazzika.Controllers
 {
-    public class MusicDbContext : DbContext
-    {
-        public DbSet<TopTrack> TopTracks { get; set; }
-
-        public MusicDbContext(DbContextOptions<MusicDbContext> options) : base(options) { }
-    }
-
     public class MusicController : Controller
     {
         private readonly ILogger<MusicController> _logger;
@@ -30,64 +22,109 @@ namespace Mazzika.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddToTopTracks([FromBody] Video video)
+        public async Task<IActionResult> AddToTopTracks([FromBody] Video video)
         {
-            _logger.LogInformation("AddToTopTracks called with video ID: {VideoId}", video.Id);
-
-            if (video == null || string.IsNullOrEmpty(video.Id))
+            if (video == null)
             {
-                _logger.LogError("Invalid video data received.");
-                return BadRequest("Invalid video data.");
+                _logger.LogError("Video object is null");
+                return BadRequest("Video object cannot be null");
             }
 
-            var existingTrack = _dbContext.TopTracks.FirstOrDefault(t => t.VideoId == video.Id);
+            _logger.LogInformation("Received video data: ID={Id}, Title={Title}", video.Id, video.Title);
 
-            if (existingTrack != null)
+            if (string.IsNullOrEmpty(video.Id) || string.IsNullOrEmpty(video.Title))
             {
-                existingTrack.PlayCount++;
-                _logger.LogInformation("Updated play count for video ID: {VideoId}", video.Id);
+                _logger.LogError("Video data is incomplete. ID={Id}, Title={Title}", video.Id, video.Title);
+                return BadRequest("Video data is incomplete");
             }
-            else
+
+            try
             {
-                var newTrack = new TopTrack
+                var existingTrack = await _dbContext.TopTracks
+                    .FirstOrDefaultAsync(t => t.VideoId == video.Id);
+
+                if (existingTrack != null)
                 {
-                    VideoId = video.Id,
-                    Title = video.Title,
-                    Description = video.Description,
-                    ThumbnailUrl = video.ThumbnailUrl,
-                    PublishedAt = video.PublishedAt,
-                    ChannelTitle = video.ChannelTitle,
-                    PlayCount = 1
-                };
-                _dbContext.TopTracks.Add(newTrack);
-                _logger.LogInformation("Added new track for video ID: {VideoId}", video.Id);
+                    existingTrack.PlayCount++;
+                    existingTrack.LastPlayed = DateTime.UtcNow;
+                    _dbContext.Entry(existingTrack).State = EntityState.Modified;
+                }
+                else
+                {
+                    var newTrack = new TopTrack
+                    {
+                        VideoId = video.Id,
+                        Title = video.Title,
+                        Description = video.Description ?? "",
+                        ThumbnailUrl = video.ThumbnailUrl ?? "",
+                        PublishedAt = video.PublishedAt,
+                        ChannelTitle = video.ChannelTitle ?? "",
+                        PlayCount = 1,
+                        LastPlayed = DateTime.UtcNow,
+                        HasBeenContinued = false
+                    };
+                    _logger.LogInformation("Creating new track entry: {Title}", newTrack.Title);
+                    await _dbContext.TopTracks.AddAsync(newTrack);
+                }
+
+                await _dbContext.SaveChangesAsync();
+                _logger.LogInformation("Successfully updated play count for video ID: {VideoId}", video.Id);
+                
+                var updatedTracks = await _dbContext.TopTracks
+                    .OrderByDescending(t => t.PlayCount)
+                    .ThenByDescending(t => t.LastPlayed)
+                    .ToListAsync();
+                    
+                return Ok(new { success = true, tracks = updatedTracks });
             }
-
-            _dbContext.SaveChanges();
-            _logger.LogInformation("Database updated successfully.");
-
-            return Ok();
-        }
-
-        [HttpGet]
-        public IActionResult TopTracks()
-        {
-            var topTracks = _dbContext.TopTracks.OrderByDescending(t => t.PlayCount).ToList();
-            return View(topTracks);
-        }
-
-        [HttpGet]
-        public IActionResult DebugTopTracks()
-        {
-            var topTracks = _dbContext.TopTracks.ToList();
-            if (!topTracks.Any())
+            catch (Exception ex)
             {
-                _logger.LogWarning("No tracks found in the database.");
-                return Content("No tracks found.");
+                _logger.LogError(ex, "Error updating top tracks for video ID: {VideoId}", video.Id);
+                return StatusCode(500, new { success = false, message = "Error updating top tracks" });
             }
+        }
 
-            _logger.LogInformation("Retrieved {Count} tracks from the database.", topTracks.Count);
-            return Json(topTracks);
+        [HttpGet]
+        public async Task<IActionResult> TopTracks()
+        {
+            try
+            {
+                // Fetch top tracks ordered by LastPlayed and PlayCount
+                var topTracks = await _dbContext.TopTracks
+                    .OrderByDescending(t => t.LastPlayed)
+                    .ThenByDescending(t => t.PlayCount)
+                    .ToListAsync();
+
+                _logger.LogInformation("Retrieved {Count} top tracks", topTracks.Count);
+                return View(topTracks);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving top tracks");
+                return View(new List<TopTrack>());
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DebugTopTracks()
+        {
+            try
+            {
+                var topTracks = await _dbContext.TopTracks.ToListAsync();
+                if (!topTracks.Any())
+                {
+                    _logger.LogWarning("No tracks found in the database.");
+                    return Content("No tracks found.");
+                }
+
+                _logger.LogInformation("Retrieved {Count} tracks from the database.", topTracks.Count);
+                return Json(topTracks);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving tracks for debug");
+                return StatusCode(500, "Error retrieving tracks");
+            }
         }
 
         [HttpGet]
@@ -96,63 +133,25 @@ namespace Mazzika.Controllers
             List<Video> trendingVideos;
             _logger.LogInformation("User is authenticated: {IsAuthenticated}", User.Identity?.IsAuthenticated);
 
-            if (User.Identity?.IsAuthenticated == true)
-            {
-                var accessToken = ((ClaimsPrincipal)User).FindFirstValue("access_token");
-                _logger.LogInformation("Access token: {AccessToken}", accessToken ?? "null");
-
-                if (!string.IsNullOrEmpty(accessToken))
+            try {
+                // Get trending music videos
+                var videos = await _youTubeService.SearchVideosAsync("arabic music trending");
+                trendingVideos = videos.Select(v => new Video
                 {
-                    // Get trending music videos using the OAuth token to get region-specific content
-                    var youTubeService = new Google.Apis.YouTube.v3.YouTubeService(new Google.Apis.Services.BaseClientService.Initializer
-                    {
-                        HttpClientInitializer = Google.Apis.Auth.OAuth2.GoogleCredential.FromAccessToken(accessToken),
-                        ApplicationName = "Mazzika"
-                    });
+                    Id = v.Id, // This should already be the correct video ID from YouTube
+                    Title = v.Title,
+                    Description = v.Description,
+                    ThumbnailUrl = v.ThumbnailUrl,
+                    PublishedAt = v.PublishedAt,
+                    ChannelTitle = v.ChannelTitle
+                }).ToList();
 
-                    var videosRequest = youTubeService.Videos.List("snippet,contentDetails,statistics");
-                    videosRequest.Chart = Google.Apis.YouTube.v3.VideosResource.ListRequest.ChartEnum.MostPopular;
-                    videosRequest.VideoCategoryId = "10"; // Music category
-                    videosRequest.MaxResults = 20;
-                    videosRequest.RegionCode = "TN"; // Set to Tunisia by default since that's where we want to focus
-
-                    var videosResponse = await videosRequest.ExecuteAsync();
-                    
-                    if (videosResponse?.Items != null)
-                    {
-                        trendingVideos = videosResponse.Items.Select(item => new Video
-                        {
-                            Id = item.Id,
-                            Title = item.Snippet.Title,
-                            Description = item.Snippet.Description,
-                            ThumbnailUrl = item.Snippet.Thumbnails.High?.Url ?? item.Snippet.Thumbnails.Default__.Url,
-                            PublishedAt = item.Snippet.PublishedAtDateTimeOffset?.DateTime ?? DateTime.Now,
-                            ChannelTitle = item.Snippet.ChannelTitle
-                        }).ToList();
-                    }
-                    else
-                    {
-                        _logger.LogWarning("No videos returned from authenticated request. Falling back to general trending.");
-                        trendingVideos = await _youTubeService.GetTrendingMusicVideosAsync("TN");
-                    }
-                }
-                else 
-                {
-                    _logger.LogWarning("Access token is missing for the logged-in user.");
-                    // Fallback to regular trending videos if token is missing
-                    trendingVideos = await _youTubeService.GetTrendingMusicVideosAsync("TN");
-                }
+                _logger.LogInformation("Successfully fetched {Count} trending videos", trendingVideos.Count);
             }
-            else
+            catch (Exception ex)
             {
-                _logger.LogInformation("Fetching general trending music for Tunisia");
-                // Get regular trending music videos for Tunisia
-                trendingVideos = await _youTubeService.GetTrendingMusicVideosAsync("TN");
-            }
-
-            if (!trendingVideos.Any())
-            {
-                ViewBag.Message = "No trending music available at the moment.";
+                _logger.LogError(ex, "Error fetching trending videos");
+                trendingVideos = new List<Video>();
             }
 
             return View(trendingVideos);
@@ -172,7 +171,7 @@ namespace Mazzika.Controllers
                     .Take(6)
                     .Select(t => new Video
                     {
-                        Id = t.VideoId,
+                        Id = t.VideoId, // Use VideoId from TopTracks
                         Title = t.Title,
                         Description = t.Description,
                         ThumbnailUrl = t.ThumbnailUrl,
@@ -189,69 +188,7 @@ namespace Mazzika.Controllers
                     allVideos.AddRange(arabicMusicMix.Take(6));
                 }
 
-                // Get trending music in Tunisia
-                var trendingMusic = await _youTubeService.GetTrendingMusicVideosAsync("TN", 6);
-                if (trendingMusic.Any())
-                {
-                    allVideos.AddRange(trendingMusic);
-                }
-
-                if (User.Identity?.IsAuthenticated == true)
-                {
-                    var accessToken = ((ClaimsPrincipal)User).FindFirstValue("access_token");
-                    if (!string.IsNullOrEmpty(accessToken))
-                    {
-                        // Initialize YouTube service with OAuth token
-                        var youTubeService = new Google.Apis.YouTube.v3.YouTubeService(new Google.Apis.Services.BaseClientService.Initializer
-                        {
-                            HttpClientInitializer = Google.Apis.Auth.OAuth2.GoogleCredential.FromAccessToken(accessToken),
-                            ApplicationName = "Mazzika"
-                        });
-
-                        // Get personalized recommendations
-                        var recommendRequest = youTubeService.Activities.List("snippet,contentDetails");
-                        recommendRequest.Mine = true;
-                        recommendRequest.MaxResults = 6;
-
-                        var response = await recommendRequest.ExecuteAsync();
-                        if (response?.Items != null)
-                        {
-                            foreach (var item in response.Items)
-                            {
-                                string? videoId = null;
-                                if (item.ContentDetails?.Upload != null)
-                                {
-                                    videoId = item.ContentDetails.Upload.VideoId;
-                                }
-                                else if (item.ContentDetails?.Like != null && item.ContentDetails.Like.ResourceId?.Kind == "youtube#video")
-                                {
-                                    videoId = item.ContentDetails.Like.ResourceId.VideoId;
-                                }
-
-                                if (!string.IsNullOrEmpty(videoId))
-                                {
-                                    var videoRequest = youTubeService.Videos.List("snippet");
-                                    videoRequest.Id = videoId;
-                                    var videoResponse = await videoRequest.ExecuteAsync();
-                                    var videoItem = videoResponse.Items?.FirstOrDefault();
-
-                                    if (videoItem != null)
-                                    {
-                                        allVideos.Add(new Video
-                                        {
-                                            Id = videoId,
-                                            Title = videoItem.Snippet.Title,
-                                            Description = videoItem.Snippet.Description,
-                                            ThumbnailUrl = videoItem.Snippet.Thumbnails.High?.Url ?? videoItem.Snippet.Thumbnails.Default__.Url,
-                                            PublishedAt = videoItem.Snippet.PublishedAtDateTimeOffset?.DateTime ?? DateTime.Now,
-                                            ChannelTitle = videoItem.Snippet.ChannelTitle
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                _logger.LogInformation("Successfully fetched recommended videos");
             }
             catch (Exception ex)
             {
@@ -260,6 +197,102 @@ namespace Mazzika.Controllers
             }
 
             return View(allVideos);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ContinuePlaylist(string currentVideoId)
+        {
+            try
+            {
+                // Get the current track
+                var currentTrack = await _dbContext.TopTracks
+                    .FirstOrDefaultAsync(t => t.VideoId == currentVideoId);
+                
+                if (currentTrack == null)
+                {
+                    return NotFound("Current track not found");
+                }
+
+                // Find the next most played track that hasn't been continued from
+                var nextTrack = await _dbContext.TopTracks
+                    .Where(t => !t.HasBeenContinued && t.VideoId != currentVideoId)
+                    .OrderByDescending(t => t.PlayCount)
+                    .FirstOrDefaultAsync();
+
+                if (nextTrack == null)
+                {
+                    // If all tracks have been continued, reset the flags and try again
+                    await _dbContext.TopTracks
+                        .ForEachAsync(t => t.HasBeenContinued = false);
+                    await _dbContext.SaveChangesAsync();
+                    
+                    nextTrack = await _dbContext.TopTracks
+                        .Where(t => t.VideoId != currentVideoId)
+                        .OrderByDescending(t => t.PlayCount)
+                        .FirstOrDefaultAsync();
+                }
+
+                if (nextTrack == null)
+                {
+                    return NotFound("No tracks available to continue to");
+                }
+
+                // Mark the track as continued
+                nextTrack.HasBeenContinued = true;
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(new { videoId = nextTrack.VideoId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting next track to continue to");
+                return StatusCode(500, "Error getting next track");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVideoDetails(string videoId)
+        {
+            try
+            {
+                var video = await _youTubeService.GetVideoDetailsAsync(videoId);
+                if (video == null)
+                {
+                    return NotFound();
+                }
+                return Json(video);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting video details for ID: {VideoId}", videoId);
+                return StatusCode(500, new { error = "Failed to get video details" });
+            }
+        }
+
+        private async Task<Video?> GetNextRecommendedVideo(string currentVideoId)
+        {
+            // First try to get a video from user's history
+            var userHistory = await _dbContext.TopTracks
+                .Where(t => t.VideoId != currentVideoId)
+                .OrderByDescending(t => t.LastPlayed)
+                .FirstOrDefaultAsync();
+
+            if (userHistory != null)
+            {
+                return new Video
+                {
+                    Id = userHistory.VideoId,
+                    Title = userHistory.Title,
+                    Description = userHistory.Description,
+                    ThumbnailUrl = userHistory.ThumbnailUrl,
+                    PublishedAt = userHistory.PublishedAt,
+                    ChannelTitle = userHistory.ChannelTitle
+                };
+            }
+
+            // If no history, get a trending video
+            var trendingVideos = await _youTubeService.SearchVideosAsync("arabic music trending");
+            return trendingVideos.FirstOrDefault();
         }
     }
 }

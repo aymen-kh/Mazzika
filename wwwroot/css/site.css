@@ -29,7 +29,7 @@ html {
 body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    margin-bottom: 60px;
+    margin-bottom: 100px;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -106,69 +106,98 @@ body {
 
 /* Cards and content */
 .card {
-    background-color: var(--bg-elevated);
-    border: none;
+    background-color: #282828;
     transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
 }
 
 .card:hover {
-    background-color: var(--hover-bg);
-    transform: translateY(-4px);
+    background-color: #383838;
+    transform: translateY(-5px);
+}
+
+.card-img-top {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+}
+
+.play-count {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.play-overlay i {
+    font-size: 3rem;
+    color: white;
+}
+
+.card:hover .play-overlay {
+    opacity: 1;
 }
 
 .card-title {
-    color: var(--text-primary);
+    color: white;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
 }
 
 .card-text {
-    color: var(--text-secondary);
+    color: #b3b3b3;
+    font-size: 0.8rem;
 }
 
 /* Player bar */
 #player-bar {
     position: fixed;
     bottom: 0;
-    left: var(--side-nav-width);
+    left: 0;
     right: 0;
-    background-color: var(--bg-secondary);
-    padding: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: #282828;
+    padding: 16px;
+    color: white;
     z-index: 1000;
 }
 
 #controls {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 0.5rem;
+    gap: 16px;
 }
 
 #song-info {
-    flex-grow: 1;
-    margin: 0 1rem;
+    flex: 1;
+    margin: 0 16px;
 }
 
 #progress {
     width: 100%;
     height: 4px;
-    -webkit-appearance: none;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
-    outline: none;
-}
-
-#progress::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 12px;
-    height: 12px;
-    background: var(--text-primary);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-#progress::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
+    margin-top: 8px;
 }
 
 /* Category filters */
@@ -192,9 +221,9 @@ body {
 /* Grid layouts */
 .music-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 1.5rem;
-    padding: 1rem 0;
+    margin-bottom: 80px;
 }
 
 /* Utility classes */
@@ -213,4 +242,30 @@ body {
 
 .btn-outline-light {
     border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Section header styles */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.see-all {
+    color: #1db954;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.see-all:hover {
+    text-decoration: underline;
+    color: #1ed760;
+}
+
+.section-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 24px;
 }

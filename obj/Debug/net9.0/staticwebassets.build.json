@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "caOrApOlofDCUPdDfwXgYqXCYLGIKZkQjecf0crqxLE=",
+  "Hash": "pgFxwQyZCYcnNPzVuBtf59jnsc8fOaALnEVQOu2jEco=",
   "Source": "Mazzika",
   "BasePath": "_content/Mazzika",
   "Mode": "Default",
@@ -269,12 +269,12 @@
       "OriginalItemSpec": "/home/aymen-khelifi/tryTo/Mazzika/wwwroot/lib/bootstrap/dist/js/bootstrap.js.map"
     },
     {
-      "Identity": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/3ribol664w-5mhi10avvq.gz",
+      "Identity": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/3ribol664w-lunjsagvzm.gz",
       "SourceId": "Mazzika",
       "SourceType": "Discovered",
       "ContentRoot": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/",
       "BasePath": "_content/Mazzika",
-      "RelativePath": "js/site#[.{fingerprint=5mhi10avvq}]?.js.gz",
+      "RelativePath": "js/site#[.{fingerprint=lunjsagvzm}]?.js.gz",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Alternative",
@@ -283,8 +283,8 @@
       "RelatedAsset": "/home/aymen-khelifi/tryTo/Mazzika/wwwroot/js/site.js",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "mnp6sndc7p",
-      "Integrity": "Yu8Aj0CuMRdjCRUqcvMRmumlZt346fqzj3tDjjHKEoQ=",
+      "Fingerprint": "2rgxrqmo9w",
+      "Integrity": "8imV7WAk4nS8kCBkGgnwCYMRvaEtPIejZcZu8DZXYvo=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "/home/aymen-khelifi/tryTo/Mazzika/wwwroot/js/site.js"
@@ -668,12 +668,12 @@
       "OriginalItemSpec": "/home/aymen-khelifi/tryTo/Mazzika/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css.map"
     },
     {
-      "Identity": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/gd5t7ln24b-m1cvvqrbie.gz",
+      "Identity": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/gd5t7ln24b-qple40t87s.gz",
       "SourceId": "Mazzika",
       "SourceType": "Discovered",
       "ContentRoot": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/",
       "BasePath": "_content/Mazzika",
-      "RelativePath": "css/site#[.{fingerprint=m1cvvqrbie}]?.css.gz",
+      "RelativePath": "css/site#[.{fingerprint=qple40t87s}]?.css.gz",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Alternative",
@@ -682,8 +682,8 @@
       "RelatedAsset": "/home/aymen-khelifi/tryTo/Mazzika/wwwroot/css/site.css",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "4hp39b0u5d",
-      "Integrity": "uNjC3LzW2RRyAyo7V9NUH5j4YeqQjOorcer68Q3j1tk=",
+      "Fingerprint": "bzdsae5nqi",
+      "Integrity": "x4duyQUZivN9I7KUo2TTipcKGncMJ/BDtTzNoZmYGHA=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "/home/aymen-khelifi/tryTo/Mazzika/wwwroot/css/site.css"
@@ -1417,8 +1417,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "m1cvvqrbie",
-      "Integrity": "uuViwZg2SAUdpLNcBq7zwNQDRbLKSXSHbCIV1GXQC6c=",
+      "Fingerprint": "qple40t87s",
+      "Integrity": "brl+2InYhm5blKfTXv118ZRqnCf5OcgUTm8fMGm7keQ=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/css/site.css"
@@ -1459,8 +1459,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "5mhi10avvq",
-      "Integrity": "U9XBxLoR3fTLxaKAHneF9d/DcCyKkxLP5TQFS4yVpjI=",
+      "Fingerprint": "lunjsagvzm",
+      "Integrity": "gzyk/a2CoWu7Ol4e6bLzFqR0oXxIzmHNl45rnyrjDO8=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/js/site.js"
@@ -2729,12 +2729,12 @@
   "Endpoints": [
     {
       "Route": "css/site.css",
-      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/gd5t7ln24b-m1cvvqrbie.gz",
+      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/gd5t7ln24b-qple40t87s.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.000784313725"
+          "Quality": "0.000667556742"
         }
       ],
       "ResponseHeaders": [
@@ -2744,15 +2744,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1274"
+          "Value": "1497"
         },
         {
           "Name": "ETag",
-          "Value": "\"uNjC3LzW2RRyAyo7V9NUH5j4YeqQjOorcer68Q3j1tk=\""
+          "Value": "\"x4duyQUZivN9I7KUo2TTipcKGncMJ/BDtTzNoZmYGHA=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 27 Apr 2025 14:13:03 GMT"
+          "Value": "Mon, 28 Apr 2025 09:10:53 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2772,13 +2772,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"uuViwZg2SAUdpLNcBq7zwNQDRbLKSXSHbCIV1GXQC6c=\""
+          "Value": "W/\"brl+2InYhm5blKfTXv118ZRqnCf5OcgUTm8fMGm7keQ=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-uuViwZg2SAUdpLNcBq7zwNQDRbLKSXSHbCIV1GXQC6c="
+          "Value": "sha256-brl+2InYhm5blKfTXv118ZRqnCf5OcgUTm8fMGm7keQ="
         }
       ]
     },
@@ -2793,7 +2793,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "4175"
+          "Value": "4868"
         },
         {
           "Name": "Content-Type",
@@ -2801,11 +2801,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"uuViwZg2SAUdpLNcBq7zwNQDRbLKSXSHbCIV1GXQC6c=\""
+          "Value": "\"brl+2InYhm5blKfTXv118ZRqnCf5OcgUTm8fMGm7keQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 27 Apr 2025 14:13:03 GMT"
+          "Value": "Mon, 28 Apr 2025 09:10:53 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2815,13 +2815,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-uuViwZg2SAUdpLNcBq7zwNQDRbLKSXSHbCIV1GXQC6c="
+          "Value": "sha256-brl+2InYhm5blKfTXv118ZRqnCf5OcgUTm8fMGm7keQ="
         }
       ]
     },
     {
       "Route": "css/site.css.gz",
-      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/gd5t7ln24b-m1cvvqrbie.gz",
+      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/gd5t7ln24b-qple40t87s.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -2830,7 +2830,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1274"
+          "Value": "1497"
         },
         {
           "Name": "Content-Type",
@@ -2838,11 +2838,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"uNjC3LzW2RRyAyo7V9NUH5j4YeqQjOorcer68Q3j1tk=\""
+          "Value": "\"x4duyQUZivN9I7KUo2TTipcKGncMJ/BDtTzNoZmYGHA=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 27 Apr 2025 14:13:03 GMT"
+          "Value": "Mon, 28 Apr 2025 09:10:53 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2860,18 +2860,18 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-uNjC3LzW2RRyAyo7V9NUH5j4YeqQjOorcer68Q3j1tk="
+          "Value": "sha256-x4duyQUZivN9I7KUo2TTipcKGncMJ/BDtTzNoZmYGHA="
         }
       ]
     },
     {
-      "Route": "css/site.m1cvvqrbie.css",
-      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/gd5t7ln24b-m1cvvqrbie.gz",
+      "Route": "css/site.qple40t87s.css",
+      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/gd5t7ln24b-qple40t87s.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.000784313725"
+          "Quality": "0.000667556742"
         }
       ],
       "ResponseHeaders": [
@@ -2881,15 +2881,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1274"
+          "Value": "1497"
         },
         {
           "Name": "ETag",
-          "Value": "\"uNjC3LzW2RRyAyo7V9NUH5j4YeqQjOorcer68Q3j1tk=\""
+          "Value": "\"x4duyQUZivN9I7KUo2TTipcKGncMJ/BDtTzNoZmYGHA=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 27 Apr 2025 14:13:03 GMT"
+          "Value": "Mon, 28 Apr 2025 09:10:53 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2909,13 +2909,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"uuViwZg2SAUdpLNcBq7zwNQDRbLKSXSHbCIV1GXQC6c=\""
+          "Value": "W/\"brl+2InYhm5blKfTXv118ZRqnCf5OcgUTm8fMGm7keQ=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "m1cvvqrbie"
+          "Value": "qple40t87s"
         },
         {
           "Name": "label",
@@ -2923,12 +2923,12 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-uuViwZg2SAUdpLNcBq7zwNQDRbLKSXSHbCIV1GXQC6c="
+          "Value": "sha256-brl+2InYhm5blKfTXv118ZRqnCf5OcgUTm8fMGm7keQ="
         }
       ]
     },
     {
-      "Route": "css/site.m1cvvqrbie.css",
+      "Route": "css/site.qple40t87s.css",
       "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/wwwroot/css/site.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -2938,7 +2938,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "4175"
+          "Value": "4868"
         },
         {
           "Name": "Content-Type",
@@ -2946,11 +2946,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"uuViwZg2SAUdpLNcBq7zwNQDRbLKSXSHbCIV1GXQC6c=\""
+          "Value": "\"brl+2InYhm5blKfTXv118ZRqnCf5OcgUTm8fMGm7keQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 27 Apr 2025 14:13:03 GMT"
+          "Value": "Mon, 28 Apr 2025 09:10:53 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2960,7 +2960,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "m1cvvqrbie"
+          "Value": "qple40t87s"
         },
         {
           "Name": "label",
@@ -2968,13 +2968,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-uuViwZg2SAUdpLNcBq7zwNQDRbLKSXSHbCIV1GXQC6c="
+          "Value": "sha256-brl+2InYhm5blKfTXv118ZRqnCf5OcgUTm8fMGm7keQ="
         }
       ]
     },
     {
-      "Route": "css/site.m1cvvqrbie.css.gz",
-      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/gd5t7ln24b-m1cvvqrbie.gz",
+      "Route": "css/site.qple40t87s.css.gz",
+      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/gd5t7ln24b-qple40t87s.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -2983,7 +2983,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1274"
+          "Value": "1497"
         },
         {
           "Name": "Content-Type",
@@ -2991,11 +2991,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"uNjC3LzW2RRyAyo7V9NUH5j4YeqQjOorcer68Q3j1tk=\""
+          "Value": "\"x4duyQUZivN9I7KUo2TTipcKGncMJ/BDtTzNoZmYGHA=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 27 Apr 2025 14:13:03 GMT"
+          "Value": "Mon, 28 Apr 2025 09:10:53 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3013,7 +3013,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "m1cvvqrbie"
+          "Value": "qple40t87s"
         },
         {
           "Name": "label",
@@ -3021,7 +3021,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-uNjC3LzW2RRyAyo7V9NUH5j4YeqQjOorcer68Q3j1tk="
+          "Value": "sha256-x4duyQUZivN9I7KUo2TTipcKGncMJ/BDtTzNoZmYGHA="
         }
       ]
     },
@@ -3324,13 +3324,13 @@
       ]
     },
     {
-      "Route": "js/site.5mhi10avvq.js",
-      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/3ribol664w-5mhi10avvq.gz",
+      "Route": "js/site.js",
+      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/3ribol664w-lunjsagvzm.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.002898550725"
+          "Quality": "0.000355871886"
         }
       ],
       "ResponseHeaders": [
@@ -3340,19 +3340,19 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "344"
+          "Value": "2809"
         },
         {
           "Name": "ETag",
-          "Value": "\"Yu8Aj0CuMRdjCRUqcvMRmumlZt346fqzj3tDjjHKEoQ=\""
+          "Value": "\"8imV7WAk4nS8kCBkGgnwCYMRvaEtPIejZcZu8DZXYvo=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 24 Apr 2025 14:49:34 GMT"
+          "Value": "Tue, 29 Apr 2025 00:04:16 GMT"
         },
         {
           "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
+          "Value": "no-cache"
         },
         {
           "Name": "Content-Encoding",
@@ -3368,26 +3368,18 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"U9XBxLoR3fTLxaKAHneF9d/DcCyKkxLP5TQFS4yVpjI=\""
+          "Value": "W/\"gzyk/a2CoWu7Ol4e6bLzFqR0oXxIzmHNl45rnyrjDO8=\""
         }
       ],
       "EndpointProperties": [
         {
-          "Name": "fingerprint",
-          "Value": "5mhi10avvq"
-        },
-        {
-          "Name": "label",
-          "Value": "js/site.js"
-        },
-        {
           "Name": "integrity",
-          "Value": "sha256-U9XBxLoR3fTLxaKAHneF9d/DcCyKkxLP5TQFS4yVpjI="
+          "Value": "sha256-gzyk/a2CoWu7Ol4e6bLzFqR0oXxIzmHNl45rnyrjDO8="
         }
       ]
     },
     {
-      "Route": "js/site.5mhi10avvq.js",
+      "Route": "js/site.js",
       "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/wwwroot/js/site.js",
       "Selectors": [],
       "ResponseHeaders": [
@@ -3397,7 +3389,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "590"
+          "Value": "9832"
         },
         {
           "Name": "Content-Type",
@@ -3405,11 +3397,156 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"U9XBxLoR3fTLxaKAHneF9d/DcCyKkxLP5TQFS4yVpjI=\""
+          "Value": "\"gzyk/a2CoWu7Ol4e6bLzFqR0oXxIzmHNl45rnyrjDO8=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 24 Apr 2025 14:49:34 GMT"
+          "Value": "Tue, 29 Apr 2025 00:04:16 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-gzyk/a2CoWu7Ol4e6bLzFqR0oXxIzmHNl45rnyrjDO8="
+        }
+      ]
+    },
+    {
+      "Route": "js/site.js.gz",
+      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/3ribol664w-lunjsagvzm.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2809"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"8imV7WAk4nS8kCBkGgnwCYMRvaEtPIejZcZu8DZXYvo=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 29 Apr 2025 00:04:16 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-8imV7WAk4nS8kCBkGgnwCYMRvaEtPIejZcZu8DZXYvo="
+        }
+      ]
+    },
+    {
+      "Route": "js/site.lunjsagvzm.js",
+      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/3ribol664w-lunjsagvzm.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000355871886"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2809"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"8imV7WAk4nS8kCBkGgnwCYMRvaEtPIejZcZu8DZXYvo=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 29 Apr 2025 00:04:16 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"gzyk/a2CoWu7Ol4e6bLzFqR0oXxIzmHNl45rnyrjDO8=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "lunjsagvzm"
+        },
+        {
+          "Name": "label",
+          "Value": "js/site.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-gzyk/a2CoWu7Ol4e6bLzFqR0oXxIzmHNl45rnyrjDO8="
+        }
+      ]
+    },
+    {
+      "Route": "js/site.lunjsagvzm.js",
+      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/wwwroot/js/site.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9832"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"gzyk/a2CoWu7Ol4e6bLzFqR0oXxIzmHNl45rnyrjDO8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 29 Apr 2025 00:04:16 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3419,7 +3556,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "5mhi10avvq"
+          "Value": "lunjsagvzm"
         },
         {
           "Name": "label",
@@ -3427,13 +3564,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-U9XBxLoR3fTLxaKAHneF9d/DcCyKkxLP5TQFS4yVpjI="
+          "Value": "sha256-gzyk/a2CoWu7Ol4e6bLzFqR0oXxIzmHNl45rnyrjDO8="
         }
       ]
     },
     {
-      "Route": "js/site.5mhi10avvq.js.gz",
-      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/3ribol664w-5mhi10avvq.gz",
+      "Route": "js/site.lunjsagvzm.js.gz",
+      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/3ribol664w-lunjsagvzm.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -3442,7 +3579,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "344"
+          "Value": "2809"
         },
         {
           "Name": "Content-Type",
@@ -3450,11 +3587,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"Yu8Aj0CuMRdjCRUqcvMRmumlZt346fqzj3tDjjHKEoQ=\""
+          "Value": "\"8imV7WAk4nS8kCBkGgnwCYMRvaEtPIejZcZu8DZXYvo=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 24 Apr 2025 14:49:34 GMT"
+          "Value": "Tue, 29 Apr 2025 00:04:16 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3472,7 +3609,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "5mhi10avvq"
+          "Value": "lunjsagvzm"
         },
         {
           "Name": "label",
@@ -3480,144 +3617,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-Yu8Aj0CuMRdjCRUqcvMRmumlZt346fqzj3tDjjHKEoQ="
-        }
-      ]
-    },
-    {
-      "Route": "js/site.js",
-      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/3ribol664w-5mhi10avvq.gz",
-      "Selectors": [
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip",
-          "Quality": "0.002898550725"
-        }
-      ],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "344"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"Yu8Aj0CuMRdjCRUqcvMRmumlZt346fqzj3tDjjHKEoQ=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Thu, 24 Apr 2025 14:49:34 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        },
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip"
-        },
-        {
-          "Name": "Vary",
-          "Value": "Content-Encoding"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "W/\"U9XBxLoR3fTLxaKAHneF9d/DcCyKkxLP5TQFS4yVpjI=\""
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-U9XBxLoR3fTLxaKAHneF9d/DcCyKkxLP5TQFS4yVpjI="
-        }
-      ]
-    },
-    {
-      "Route": "js/site.js",
-      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/wwwroot/js/site.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "590"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"U9XBxLoR3fTLxaKAHneF9d/DcCyKkxLP5TQFS4yVpjI=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Thu, 24 Apr 2025 14:49:34 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-U9XBxLoR3fTLxaKAHneF9d/DcCyKkxLP5TQFS4yVpjI="
-        }
-      ]
-    },
-    {
-      "Route": "js/site.js.gz",
-      "AssetFile": "/home/aymen-khelifi/tryTo/Mazzika/obj/Debug/net9.0/compressed/3ribol664w-5mhi10avvq.gz",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "344"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"Yu8Aj0CuMRdjCRUqcvMRmumlZt346fqzj3tDjjHKEoQ=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Thu, 24 Apr 2025 14:49:34 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        },
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip"
-        },
-        {
-          "Name": "Vary",
-          "Value": "Content-Encoding"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-Yu8Aj0CuMRdjCRUqcvMRmumlZt346fqzj3tDjjHKEoQ="
+          "Value": "sha256-8imV7WAk4nS8kCBkGgnwCYMRvaEtPIejZcZu8DZXYvo="
         }
       ]
     },

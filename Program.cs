@@ -72,11 +72,19 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Configure in-memory database
-builder.Services.AddDbContext<MusicDbContext>(options =>
-    options.UseInMemoryDatabase("MusicDb"));
+// Configure SQLite database
+builder.Services.AddDbContext<Mazzika.Data.MusicDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=music.db"));
 
 var app = builder.Build();
+
+// Ensure database is created
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var dbContext = services.GetRequiredService<Mazzika.Data.MusicDbContext>();
+    dbContext.Database.EnsureCreated();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

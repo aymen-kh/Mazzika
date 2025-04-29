@@ -14,5 +14,6 @@ namespace Mazzika.Services
         Task<List<Video>> GetTrendingMusicVideosAsync(string regionCode = "US", int maxResults = 10);
         Task<List<Video>> GetPersonalizedTrendingMusicAsync(string userRegion, int maxResults = 10);
         Task<List<Video>> GetHomePageVideosAsync(string accessToken, int maxResults = 10);
+        Task<Video?> GetVideoDetailsAsync(string videoId);
     }
 }
